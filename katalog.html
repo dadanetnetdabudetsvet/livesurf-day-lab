@@ -1001,6 +1001,41 @@
 [data-bg='dark'] .blk-accent[data-warn='true'] { color: #F5A623; }
 .blk-week--prizes .blk-day { transition: opacity .3s ease; }
 @media (prefers-reduced-motion: reduce) { .blk-week--prizes .blk-day { transition: none; } }
+
+/* Ступень цены: пустое состояние, вклады и темп (N7, N8, N9) */
+.blk-ladder > div { position: relative; }
+.blk-ladder--empty > div { border-style: dashed; color: var(--ls-ink-2); cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.blk-ladder--empty > div b { color: var(--ls-ink-2); }
+.blk-ladder--empty > div[data-lit='true'] { border-style: solid; border-color: var(--ls-cyan); background: var(--ls-cyan-soft); transform: translateY(-2px); }
+.blk-ladder--empty > div[data-lit='true'] b, .blk-ladder--empty > div[data-lit='true'] { color: var(--ls-cyan-deep); }
+.blk-ladder > div:hover > .blk-bubble, .blk-ladder > div:focus-within > .blk-bubble, .blk-ladder > div[data-lit='true'] > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-ladder .blk-bubble { width: 200px; }
+/* заголовок подсказки не должен наследовать цвет плитки: фон пузыря тёмный */
+.blk-ladder .blk-bubble b { color: inherit; font-size: 12px; margin-bottom: 2px; }
+.blk-ladder .blk-bubble span { color: inherit; font-size: 11px; }
+.blk-ladder > div:first-child .blk-bubble { left: 0; transform: none; }
+.blk-ladder > div:first-child .blk-bubble::before { left: 22px; margin-left: 0; }
+.blk-ladder > div:last-child .blk-bubble { left: auto; right: 0; transform: none; }
+.blk-ladder > div:last-child .blk-bubble::before { left: auto; right: 22px; margin-left: 0; }
+.blk-bar--multi { display: flex; height: 14px; }
+.blk-bar--multi button { flex: 0 0 var(--w); border: 0; padding: 0; cursor: pointer; transition: filter .2s, flex-basis .4s ease; }
+.blk-bar--multi button[data-part='credits'] { background: var(--ls-cyan); }
+.blk-bar--multi button[data-part='sub'] { background: var(--ls-green); }
+.blk-bar--multi button[data-part='ref'] { background: #F5A623; }
+.blk-bar--multi button[data-dim='true'] { filter: grayscale(1) opacity(.45); }
+.blk-bar--multi button:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: -3px; }
+.blk-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 11px; color: var(--ls-ink-2); }
+.blk-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.blk-legend span::before { content: ''; width: 9px; height: 9px; border-radius: 3px; background: var(--ls-line-strong); }
+.blk-legend span[data-part='credits']::before { background: var(--ls-cyan); }
+.blk-legend span[data-part='sub']::before { background: var(--ls-green); }
+.blk-legend span[data-part='ref']::before { background: #F5A623; }
+[data-bg='dark'] .blk-legend { color: var(--ls-on-dark-2); }
+[data-bg='mint'] .blk-legend { color: var(--ls-cyan-deep); }
+.blk-bar i { transition: width .5s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .blk-ladder--empty > div, .blk-bar--multi button, .blk-bar i { transition: none; }
+}
 </style><style>
   :root { color-scheme: light; }
   [hidden] { display: none !important; }
@@ -1779,6 +1814,31 @@
 <div class="blk-list"><div><span>20 дополнительных слотов</span><b>1 999 ₽</b></div><div><span>Подъём одной ссылки</span><b>100 ₽</b></div><div><span>Подъём всех ссылок проекта</span><b>от 400 ₽</b></div></div>
 <p class="blk-t blk-t--muted blk-t--sm blk-mt-sm">Одна цена на экран, одна единица измерения, никаких «от» без второй границы.</p>
 </section>
+<section class="cat-item" data-id="N7" data-group="N. Цена, срочность и доверие"
+         data-title="Ступень цены до первой покупки" data-purpose="Та же лестница пакетов, что в N3, но для того, кто ещё ничего не купил: плитки пустые, шкала на нуле, и это сказано прямо. Вместо рекламы — счётчик: выберите, сколько визитов нужно в месяц, и каждая ступень покажет свою цену в рублях именно для этого объёма. Наведение или фокус на ступени показывает, что она даёт и сколько стоит вход в неё."
+         data-need="прайс-сетка, факт отсутствия покупок, средний расход визитов" data-verdict="Основа для нового аккаунта: N3 в пустом состоянии показывает чужую жизнь" data-bg="light">
+<div class="blk-row blk-row--between"><div class="blk-h blk-h--sm" style="margin:0">Цена тысячи визитов</div><span class="ls-chip">покупок пока нет</span></div>
+<p class="ls-caption blk-mt-sm">Сколько визитов нужно в месяц</p>
+<div class="blk-tabs" role="tablist" aria-label="Объём визитов в месяц"><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="10000" aria-selected="true">10 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="50000" aria-selected="false">50 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="200000" aria-selected="false">200 тыс.</button></div>
+<div class="blk-ladder blk-ladder--empty blk-mt" data-live-host="price"><div data-live-act="step" data-pack="50000" data-price="50" data-title="Пакет 50 000"><b>50 000</b><span>50 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 50 000 кредитов</b><span data-live-out="b1">вход 2 500 ₽</span><span>первая ступень: цена падает с прайсовой сразу после покупки</span></span></div><div data-live-act="step" data-pack="300000" data-price="15" data-title="Пакет 300 000"><b>300 000</b><span>15 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 300 000 кредитов</b><span data-live-out="b2">вход 4 500 ₽</span><span>в три раза дешевле за тысячу визитов, чем первая ступень</span></span></div><div data-live-act="step" data-pack="1000000" data-price="5.9" data-title="Пакет 1 000 000"><b>1 000 000</b><span>5,9 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 1 000 000 кредитов</b><span data-live-out="b3">вход 5 900 ₽</span><span>рабочая ступень для постоянного трафика</span></span></div><div data-live-act="step" data-pack="10000000" data-price="0.8" data-title="Пакет 10 000 000"><b>10 000 000</b><span>0,8 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 10 000 000 кредитов</b><span data-live-out="b4">вход 8 000 ₽</span><span>нижняя цена прайса</span></span></div></div>
+<div class="blk-bar blk-mt" aria-hidden="true"><i style="width:0%"></i></div>
+<p class="blk-bar-note" data-live-out="price">Шкала пустая: покупок ещё не было. При 10 тыс. визитов в месяц первая ступень стоит <b class="blk-accent">500 ₽</b>, а ступень 1 000 000 — <b class="blk-accent">59 ₽</b> за тот же объём.</p>
+</section>
+<section class="cat-item" data-id="N8" data-group="N. Цена, срочность и доверие"
+         data-title="Шкала ступени из трёх вкладов" data-purpose="Комбинированная версия N3: до следующей ступени цены шкалу двигает не только покупка кредитов, а весь оборот квартала — кредиты, подписка и покупки приглашённых по вашей ссылке. Каждый вклад — свой сегмент шкалы со своим цветом; наведение показывает, сколько дал именно он и что сделать, чтобы дал больше."
+         data-need="прайс-сетка, оборот квартала по трём источникам, опубликованное правило зачёта, холд на реферальный оборот" data-verdict="Гипотеза под цель «средний чек»: правило зачёта надо публиковать и защищать холдом" data-bg="light">
+<div class="blk-ladder blk-mt"><div data-done="true"><b>50 000</b><span>50 ₽ / 1 000</span></div><div data-now="true"><b>300 000</b><span>15 ₽ / 1 000</span></div><div><b>1 000 000</b><span>5,9 ₽ / 1 000</span></div><div><b>10 000 000</b><span>0,8 ₽ / 1 000</span></div></div>
+<div class="blk-bar blk-bar--multi blk-mt" data-live-host="mix"><button type="button" data-live-act="part" data-part="credits" data-sum="340000" data-money="5100" data-how="Докупить кредиты пакетом — самый быстрый путь: 660 000 закрывают ступень сразу" style="--w:34%" aria-label="Купленные кредиты: 340 000"></button><button type="button" data-live-act="part" data-part="sub" data-sum="90000" data-money="2997" data-how="Подписка идёт в оборот автоматически, пока активна" style="--w:9%" aria-label="Подписка за квартал: 90 000"></button><button type="button" data-live-act="part" data-part="ref" data-sum="70000" data-money="1050" data-how="Покупки приглашённых засчитываются после холда 30 дней" style="--w:7%" aria-label="Приглашённые: 70 000"></button></div>
+<div class="blk-legend"><span data-part="credits">кредиты 340 000</span><span data-part="sub">подписка 90 000</span><span data-part="ref">приглашённые 70 000</span></div>
+<p class="blk-bar-note" data-live-out="mix">Оборот квартала <b class="blk-accent">500 000</b> из 1 000 000. Ещё <b class="blk-accent">500 000</b> — и тысяча визитов стоит 5,9 ₽ вместо 15 ₽. Наведите на сегмент: покажет, сколько дал он и что сделать дальше.</p>
+</section>
+<section class="cat-item" data-id="N9" data-group="N. Цена, срочность и доверие"
+         data-title="Ступень цены в днях и рублях" data-purpose="Третья подача той же лестницы: вместо «осталось 660 000» — сколько это дней на вашем темпе и что даст переход в рублях. Переключатель «добрать сейчас / идти как идёте» пересчитывает обе цифры: срок перехода и экономию за следующий квартал. Срочности нет — есть арифметика."
+         data-need="прайс-сетка, расход визитов за 30 дней, остаток кредитов" data-verdict="Гипотеза: срок и выгода в рублях мотивируют точнее, чем полоса прогресса" data-bg="mint">
+<div class="blk-row blk-row--between"><div><p class="ls-caption">До цены 5,9 ₽ за тысячу</p><div class="blk-wallet"><div><b data-live-out="days">83</b><span data-live-out="dlabel">дня на вашем темпе</span></div><div><b data-live-out="save">6 060</b><span>₽ экономии за квартал</span></div></div></div><button class="ls-btn ls-btn--sm" type="button" data-live-act="jump">Добрать сейчас</button></div>
+<div class="blk-bar blk-mt" data-live-host="pace"><i data-live-out="fill" style="width:34%"></i></div>
+<p class="blk-bar-note" data-live-out="pace">Вы тратите 8 000 визитов в день. На этом темпе ступень 1 000 000 придёт через 83 дня. Кнопка показывает, что будет, если добрать 660 000 сразу.</p>
+</section>
 
 <!-- ===================== Дополнения к существующим группам ===================== -->
 <section class="cat-item" data-id="C8" data-group="C. Уровень и опыт"
@@ -2230,11 +2290,11 @@ const scenarios = {
 
 /* --- Приоритеты --------------------------------------------------------- */
 const core = new Set(
-  ("A1 A7 B1 B2 C1 C2 C5 C6 C8 C9 D1 D2 D4 D8 D9 D10 E8 H1 H2 H4 H5 H6 H7 O3 O4 O6 " +
+  ("A1 A7 B1 B2 C1 C2 C5 C6 C8 C9 D1 D2 D4 D8 D9 D10 E8 H1 H2 H4 H5 H6 H7 N7 O3 O4 O6 " +
    "I1 I2 I3 I4 I5 I6 J1 J6 J7 J8 J9 K1 L1 L2 L6 L8 M1 M2 M3 M4 N1 N2 N3 N4 N6").split(" "),
 );
 const later = new Set("A6 E6 F4 F6 G4 G6 J5 K10".split(" "));
-const experiment = new Set("A4 B7 D6 E5 F5 G5 J4 K2 K3 K6 K9 L4 L5 L7 M7 N5 O1 O2 O5 O7 B9 B10".split(" "));
+const experiment = new Set("A4 B7 D6 E5 F5 G5 J4 K2 K3 K6 K9 L4 L5 L7 M7 N5 O1 O2 O5 O7 B9 B10 N8 N9".split(" "));
 const avoid = new Set("Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11".split(" "));
 
 const only = {
@@ -2287,7 +2347,7 @@ const only = {
   M7: ["owner"],
   N1: ["owner", "subscriber", "newcomer"],
   N2: ["owner", "subscriber"],
-  N3: ["owner"],
+  N3: ["owner"], N7: ["owner", "returning"], N8: ["owner"], N9: ["owner"],
   N4: ["owner", "newcomer"],
   N5: ["owner"],
   N6: ["owner", "newcomer"],
@@ -2330,6 +2390,9 @@ const evidence = {
   M5: { level: "📏", src: "ECON-07: 84–92 % отмен до первого списания, лестница скидок начинается с пятого", not: "—" },
   N1: { level: "📏", src: "ФЗ «О рекламе» ст. 5, КоАП 14.3: 100–500 тыс. ₽ за факт; практика УФАС 09.2025", not: "Прирост конверсии от таймеров нигде не измерен — убирать нечего." },
   N2: { level: "📏", src: "ЕС Omnibus: старая цена = минимальная за 30 дней; ФАС: «Лента» 40 % → 5 %", not: "—" },
+  N7: { level: "📏", src: "Прайс-сетка продукта: 50 / 15 / 5,9 / 0,8 ₽ за 1 000; ECON-16 — пустая шкала у неплатившего показывает чужой прогресс", not: "Никаких «скидок»: показываем цену прайса на объём, который человек назвал сам. Вход в ступень — это покупка пакета, а не награда." },
+  N8: { level: "🗣", src: "Комбинированная шкала предложена владельцем 18.09.2026; правило зачёта оборота в продукте не существует", not: "Не показывать, пока правило зачёта не опубликовано: это условия акции. Реферальный оборот засчитывать только после холда, иначе мультиаккаунт превращает шкалу в скидку себе (MKT-07)." },
+  N9: { level: "📏", src: "Kivetz et al. 2006: близкая цель ускоряет; ECON-16 — выгода считается на реальном расходе", not: "Срок окупаемости считается на текущем расходе и называется вслух. Таймеров и «осталось N часов» здесь быть не может (UX-03)." },
   N3: { level: "📏", src: "Kivetz et al. 2006 (goal gradient); ECON-16: 2 249 ₽ создают 7,5 ₽ за 1 000 между ступенями", not: "Эффект геймификации на средний чек в литературе не измерен вовсе." },
   N4: { level: "📏", src: "Deci 1999: информационная обратная связь +0,33; числа compare считает бэк", not: "—" },
   O1: { level: "📏", src: "Bornfeld & Rafaeli 2017: 18 из 22 запусков бейджей сработали; Lepper 1973: неожиданная награда не подрывает мотивацию; 138-ФЗ — платные лотереи только государственные", not: "Эффект именно ивент-календаря нигде не измерен. Случайность допустима только как стимулирующее мероприятие с опубликованными правилами." },
@@ -2381,6 +2444,9 @@ const lenses = {
   M4: { l1: "—", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём", why: "«хватит на N дней» уже считается" },
   N1: { l1: "◐", l2: "◐", l3: "◐", l4: "—", l5: "◐", curator: "берём как замену пяти таймерам", why: "цена ошибки известна, прирост — нет" },
   N3: { l1: "◐", l2: "✓", l3: "◐", l4: "—", l5: "✓", curator: "берём вместо −50 % ниже сетки", why: "сохраняет лестницу цен" },
+  N7: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём для аккаунта без покупок", why: "пустая шкала названа пустой, а вместо рекламы — счёт на объём самого человека" },
+  N8: { l1: "✓", l2: "◐", l3: "✓", l4: "—", l5: "◐", curator: "эксперимент под средний чек", why: "двигает выручку тремя источниками сразу, но правило зачёта надо публиковать и защищать холдом" },
+  N9: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём вместо полосы прогресса", why: "срок и рубли понятнее процента: обещание проверяемо" },
   O1: { l1: "✓", l2: "◐", l3: "◐", l4: "—", l5: "◐", curator: "можно как эксперимент, только с O4 и потолком", why: "разные награды сильнее однотипных, но случайность без опубликованных правил — лотерея" },
   O2: { l1: "✓", l2: "◐", l3: "✓", l4: "—", l5: "✓", curator: "берём вместо одинакового «+1»", why: "снимает рутину, каждый тип награды защищается экономикой отдельно" },
   O3: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём", why: "правдивой суммы достаточно: потеря и так весит вдвое больше выгоды" },
@@ -2460,6 +2526,9 @@ const signals = {
   N1: { signal: "have", event: "срок оффера с сервера" },
   N2: { signal: "none", event: "истории цен за 30 дней нет" },
   N3: { signal: "backend", event: "история покупок по пакетам" },
+  N7: { signal: "backend", event: "факт отсутствия покупок есть; нужен выбор объёма как событие need_selected" },
+  N8: { signal: "none", event: "оборота по трём источникам нет: нужны правило зачёта, холд и журнал" },
+  N9: { signal: "backend", event: "расход визитов за 30 дней есть; нужно событие tier_projection_shown" },
   N4: { signal: "have", event: "compare от бэка" },
   N5: { signal: "backend", event: "покупки и начисления за период" },
   O1: { signal: "none", event: "календаря нет: нужны пул, журнал выдач и потолок" },
@@ -2531,6 +2600,9 @@ const practice = {
   M2: "Смена плана в момент отмены (Churnkey, 3 млн сессий).",
   M3: "Dunning: восстановление непроизвольного оттока (Recurly).",
   N3: "Градиент цели на реальной цене вместо скидки ниже сетки.",
+  N7: "Пустое состояние вместо чужого прогресса: человек называет свой объём и видит свою цену.",
+  N8: "Одна цель из нескольких вкладов: видно, что именно её двигает и что сделать дальше.",
+  N9: "Цель в днях и рублях: срок перехода и срок окупаемости названы вслух.",
   B9: "Одна карточка вместо двух: сумма, действие и правда о статусе рядом; апселл не выше награды и один на окно.",
   B10: "Часть и целое: своя доля закрашена, остальное прозрачно — та же правда о статусе без карточек и без текста.",
   N4: "Информационная обратная связь (Deci, Koestner & Ryan, 1999): +0,33 — единственный положительный знак.",
@@ -2653,6 +2725,9 @@ const notes = {
   N1: "Один источник времени на оффер; дата вместо секундомера.",
   N2: "База скидки — минимальная цена за 30 дней.",
   N3: "Прогресс к следующей ступени сетки вместо −50 % на повтор.",
+  N7: "Для аккаунта без покупок N3 показывает чужую жизнь: заполненные плитки и полосу, которой у человека нет. N7 говорит «покупок пока нет» прямо, а вместо рекламы даёт счёт: человек выбирает нужный объём визитов, и каждая ступень показывает свою цену в рублях именно для него. Наведение и фокус раскрывают, что даёт ступень и сколько стоит вход. Никаких скидок: это цены прайса.",
+  N8: "Ответ на вопрос «чем наполнять шкалу, кроме покупки». Шкалу двигает оборот квартала из трёх источников: кредиты, подписка и покупки приглашённых. Каждый вклад — свой сегмент; наведение показывает его долю, рубли и следующий шаг. Условие запуска: правило зачёта публикуется заранее как условия акции, реферальный оборот засчитывается после холда — иначе мультиаккаунт превращает шкалу в скидку себе (MKT-07). Кредиты за оборот не начисляются: двигается только цена по прайсу.",
+  N9: "Та же лестница, но в понятных величинах: сколько дней до ступени на текущем расходе и сколько рублей она вернёт за квартал. Кнопка «Добрать сейчас» показывает цену добора по прайсу, новую цену тысячи визитов и срок окупаемости. Срочности нет: ни таймера, ни «последний день» — только арифметика, которую можно проверить.",
   N4: "Числа из аккаунта и очереди, не из рекламы. Редкий честный элемент — сохранить.",
   N5: "Своё число убеждает сильнее сравнения тарифов.",
   N6: "Одна цена на экран, одна единица измерения.",
@@ -3118,6 +3193,11 @@ function lint(ids, blocks = []) {
   const timers = ['A3', 'F6', 'K2', 'N1'].filter(has);
   if (timers.length >= 2) w.push(`Сроков на экране: ${timers.join(', ')}. Один таймер на один оффер — остальное ловится на несоответствии за один заход (UX-03).`);
   if (has('F6') && !has('N2')) w.push('F6 «скидка со сроком» без реальной базы (N2): скидка от неприменявшейся цены наказуема сама по себе, 100–500 тыс. ₽ за факт.');
+  /* лестница цены: три подачи одной механики */
+  const tiers = ['N3', 'N7', 'N8', 'N9'].filter(has);
+  if (tiers.length > 1) w.push(`Ступень цены показана дважды: ${tiers.join(', ')}. Это разные подачи одной лестницы — в окно идёт одна.`);
+  if (has('N8')) w.push('N8 засчитывает в шкалу оборот приглашённых: нужен холд и опубликованное правило зачёта, иначе мультиаккаунт делает из шкалы скидку себе (MKT-07), а незаявленное правило — условия акции без существенной информации.');
+  if (has('N3') && !has('D2')) w.push('N3 показывает прогресс покупок: у аккаунта без покупок он будет пустым и прочитается как реклама. Для такого состояния есть N7.');
 
   /* противоречия и дубли */
   if (has('K10') && has('B1')) w.push('K10 рядом с ежедневным начислением: празднование частоты транзакций запрещено прямо (Robinhood, $7,5 млн). Оставьте празднование только на вехе.');
@@ -3226,7 +3306,7 @@ const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 const pad = (n) => String(n).padStart(2, '0');
 const key = (el, fn) => { el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }; };
 /* Числа с узким пробелом между разрядами и плавный пересчёт (B9, B10) */
-const fmtN = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const fmtN = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const tween = (el, from, to, prefix = '+', ms = 450) => {
   if (reduced || from === to) { el.textContent = prefix + fmtN(to); return; }
   const t0 = performance.now();
@@ -3991,6 +4071,89 @@ const live = {
       circle.onclick = claim; key(circle, claim);
       circle.onmouseenter = closeAll;
     });
+    return true;
+  },
+  N7(stage, ctx) {
+    const steps = acts(stage, 'step'), needs = acts(stage, 'need'), res = out(stage, 'price');
+    if (!steps.length) return false;
+    let need = 10000;
+    const cost = (price) => Math.round((need / 1000) * price);
+    const paint = () => {
+      steps.forEach((st, i) => {
+        const c = cost(+st.dataset.price);
+        out(stage, 'b' + (i + 1)).textContent = `ваш объём: ${fmtN(c)} ₽ в месяц`;
+      });
+      const first = cost(+steps[0].dataset.price), best = cost(+steps[2].dataset.price);
+      res.innerHTML = `Шкала пустая: покупок ещё не было. При ${fmtN(need)} визитах в месяц первая ступень стоит <b class="blk-accent">${fmtN(first)} ₽</b>, а ступень 1 000 000 — <b class="blk-accent">${fmtN(best)} ₽</b> за тот же объём. Разница <b class="blk-accent">${fmtN(first - best)} ₽</b> в месяц.`;
+    };
+    steps.forEach((st) => {
+      st.tabIndex = 0; st.setAttribute('role', 'button');
+      const lit = (on) => { steps.forEach((x) => x.removeAttribute('data-lit')); if (on) st.dataset.lit = 'true'; };
+      st.onmouseenter = () => lit(true); st.onmouseleave = () => lit(false);
+      st.onfocus = () => lit(true); st.onblur = () => lit(false);
+      const tell = () => {
+        lit(true);
+        ctx.announce(`${st.dataset.title}: ${fmtN(cost(+st.dataset.price))} ₽ за ${fmtN(need)} визитов в месяц. Цена ступени опубликована в прайсе, это не скидка.`);
+      };
+      st.onclick = tell; key(st, tell);
+    });
+    needs.forEach((b) => {
+      b.onclick = () => {
+        needs.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+        need = +b.dataset.need; paint();
+        ctx.announce(`Пересчитано на ${fmtN(need)} визитов в месяц. Пустая шкала честнее чужого прогресса: человек видит свою цену, а не чей-то путь.`);
+      };
+    });
+    paint();
+    return true;
+  },
+  N8(stage, ctx) {
+    const parts = acts(stage, 'part'), res = out(stage, 'mix');
+    if (!parts.length) return false;
+    const TARGET = 1000000;
+    const total = parts.reduce((s2, p) => s2 + +p.dataset.sum, 0);
+    const names = { credits: 'Купленные кредиты', sub: 'Подписка', ref: 'Приглашённые' };
+    const normal = res.innerHTML;
+    let sticky = null;
+    const show = (p) => {
+      parts.forEach((x) => { if (p && x !== p) x.dataset.dim = 'true'; else x.removeAttribute('data-dim'); });
+      if (!p) { res.innerHTML = normal; return; }
+      const sum = +p.dataset.sum, share = Math.round((sum / total) * 100);
+      res.innerHTML = `<b class="blk-accent">${names[p.dataset.part]}: ${fmtN(sum)}</b> из ${fmtN(total)} оборота — это ${share} % шкалы и ${fmtN(+p.dataset.money)} ₽. ${p.dataset.how}.`;
+    };
+    parts.forEach((p) => {
+      p.onmouseenter = () => show(p); p.onmouseleave = () => show(sticky);
+      p.onfocus = () => show(p); p.onblur = () => show(sticky);
+      p.onclick = () => { sticky = sticky === p ? null : p; show(sticky); ctx.announce(sticky ? res.textContent : `Оборот квартала ${fmtN(total)} из ${fmtN(TARGET)}.`); };
+    });
+    return true;
+  },
+  N9(stage, ctx) {
+    const btn = q(stage, '[data-live-act="jump"]'), res = out(stage, 'pace');
+    const days = out(stage, 'days'), save = out(stage, 'save'), fill = out(stage, 'fill'), dlabel = out(stage, 'dlabel');
+    if (!btn) return false;
+    /* «0 дня» — брак: подпись согласуется с числом */
+    const dword = (n) => { const t = n % 100, o = n % 10; return t > 10 && t < 20 ? 'дней' : o === 1 ? 'день' : o > 1 && o < 5 ? 'дня' : 'дней'; };
+    let jumped = false;
+    const normal = res.innerHTML;
+    btn.onclick = () => {
+      jumped = !jumped;
+      if (jumped) {
+        tween(days, 83, 0, ''); tween(save, 6060, 9900, '');
+        dlabel.textContent = 'дней ждать не нужно';
+        fill.style.width = '100%';
+        btn.textContent = 'Идти как идёте';
+        res.innerHTML = 'Добор 660 000 стоит <b class="blk-accent">9 900 ₽</b> по прайсу. Цена тысячи визитов падает с 15 ₽ до 5,9 ₽ сразу, и на вашем расходе 8 000 визитов в день это <b class="blk-accent">2 184 ₽</b> в месяц назад. Вложение возвращается за <b class="blk-accent">136 дней</b>; если расход вырастет — быстрее.';
+        ctx.announce('Добор показан честно: цена пакета по прайсу, выгода посчитана на вашем расходе, срок окупаемости назван. Никакой срочности и никакого таймера.');
+      } else {
+        tween(days, 0, 83, ''); tween(save, 9900, 6060, '');
+        dlabel.textContent = `${dword(83)} на вашем темпе`;
+        fill.style.width = '34%';
+        btn.textContent = 'Добрать сейчас';
+        res.innerHTML = normal;
+        ctx.announce('Вернулись к текущему темпу: ступень придёт через 83 дня сама.');
+      }
+    };
     return true;
   },
   O2(stage, ctx) {

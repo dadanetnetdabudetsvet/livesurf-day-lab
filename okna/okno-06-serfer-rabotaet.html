@@ -1002,6 +1002,41 @@
 [data-bg='dark'] .blk-accent[data-warn='true'] { color: #F5A623; }
 .blk-week--prizes .blk-day { transition: opacity .3s ease; }
 @media (prefers-reduced-motion: reduce) { .blk-week--prizes .blk-day { transition: none; } }
+
+/* Ступень цены: пустое состояние, вклады и темп (N7, N8, N9) */
+.blk-ladder > div { position: relative; }
+.blk-ladder--empty > div { border-style: dashed; color: var(--ls-ink-2); cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.blk-ladder--empty > div b { color: var(--ls-ink-2); }
+.blk-ladder--empty > div[data-lit='true'] { border-style: solid; border-color: var(--ls-cyan); background: var(--ls-cyan-soft); transform: translateY(-2px); }
+.blk-ladder--empty > div[data-lit='true'] b, .blk-ladder--empty > div[data-lit='true'] { color: var(--ls-cyan-deep); }
+.blk-ladder > div:hover > .blk-bubble, .blk-ladder > div:focus-within > .blk-bubble, .blk-ladder > div[data-lit='true'] > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-ladder .blk-bubble { width: 200px; }
+/* заголовок подсказки не должен наследовать цвет плитки: фон пузыря тёмный */
+.blk-ladder .blk-bubble b { color: inherit; font-size: 12px; margin-bottom: 2px; }
+.blk-ladder .blk-bubble span { color: inherit; font-size: 11px; }
+.blk-ladder > div:first-child .blk-bubble { left: 0; transform: none; }
+.blk-ladder > div:first-child .blk-bubble::before { left: 22px; margin-left: 0; }
+.blk-ladder > div:last-child .blk-bubble { left: auto; right: 0; transform: none; }
+.blk-ladder > div:last-child .blk-bubble::before { left: auto; right: 22px; margin-left: 0; }
+.blk-bar--multi { display: flex; height: 14px; }
+.blk-bar--multi button { flex: 0 0 var(--w); border: 0; padding: 0; cursor: pointer; transition: filter .2s, flex-basis .4s ease; }
+.blk-bar--multi button[data-part='credits'] { background: var(--ls-cyan); }
+.blk-bar--multi button[data-part='sub'] { background: var(--ls-green); }
+.blk-bar--multi button[data-part='ref'] { background: #F5A623; }
+.blk-bar--multi button[data-dim='true'] { filter: grayscale(1) opacity(.45); }
+.blk-bar--multi button:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: -3px; }
+.blk-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 11px; color: var(--ls-ink-2); }
+.blk-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.blk-legend span::before { content: ''; width: 9px; height: 9px; border-radius: 3px; background: var(--ls-line-strong); }
+.blk-legend span[data-part='credits']::before { background: var(--ls-cyan); }
+.blk-legend span[data-part='sub']::before { background: var(--ls-green); }
+.blk-legend span[data-part='ref']::before { background: #F5A623; }
+[data-bg='dark'] .blk-legend { color: var(--ls-on-dark-2); }
+[data-bg='mint'] .blk-legend { color: var(--ls-cyan-deep); }
+.blk-bar i { transition: width .5s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .blk-ladder--empty > div, .blk-bar--multi button, .blk-bar i { transition: none; }
+}
 </style>
 <style>
   html, body { margin: 0; height: 100%; }
@@ -1130,7 +1165,7 @@ const fmt = (n) => Math.round(n).toLocaleString('ru-RU');
 const pad = (n) => String(n).padStart(2, '0');
 const key = (el, fn) => { el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } }; };
 /* Числа с узким пробелом между разрядами и плавный пересчёт (B9, B10) */
-const fmtN = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const fmtN = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const tween = (el, from, to, prefix = '+', ms = 450) => {
   if (reduced || from === to) { el.textContent = prefix + fmtN(to); return; }
   const t0 = performance.now();
@@ -1895,6 +1930,89 @@ const live = {
       circle.onclick = claim; key(circle, claim);
       circle.onmouseenter = closeAll;
     });
+    return true;
+  },
+  N7(stage, ctx) {
+    const steps = acts(stage, 'step'), needs = acts(stage, 'need'), res = out(stage, 'price');
+    if (!steps.length) return false;
+    let need = 10000;
+    const cost = (price) => Math.round((need / 1000) * price);
+    const paint = () => {
+      steps.forEach((st, i) => {
+        const c = cost(+st.dataset.price);
+        out(stage, 'b' + (i + 1)).textContent = `ваш объём: ${fmtN(c)} ₽ в месяц`;
+      });
+      const first = cost(+steps[0].dataset.price), best = cost(+steps[2].dataset.price);
+      res.innerHTML = `Шкала пустая: покупок ещё не было. При ${fmtN(need)} визитах в месяц первая ступень стоит <b class="blk-accent">${fmtN(first)} ₽</b>, а ступень 1 000 000 — <b class="blk-accent">${fmtN(best)} ₽</b> за тот же объём. Разница <b class="blk-accent">${fmtN(first - best)} ₽</b> в месяц.`;
+    };
+    steps.forEach((st) => {
+      st.tabIndex = 0; st.setAttribute('role', 'button');
+      const lit = (on) => { steps.forEach((x) => x.removeAttribute('data-lit')); if (on) st.dataset.lit = 'true'; };
+      st.onmouseenter = () => lit(true); st.onmouseleave = () => lit(false);
+      st.onfocus = () => lit(true); st.onblur = () => lit(false);
+      const tell = () => {
+        lit(true);
+        ctx.announce(`${st.dataset.title}: ${fmtN(cost(+st.dataset.price))} ₽ за ${fmtN(need)} визитов в месяц. Цена ступени опубликована в прайсе, это не скидка.`);
+      };
+      st.onclick = tell; key(st, tell);
+    });
+    needs.forEach((b) => {
+      b.onclick = () => {
+        needs.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+        need = +b.dataset.need; paint();
+        ctx.announce(`Пересчитано на ${fmtN(need)} визитов в месяц. Пустая шкала честнее чужого прогресса: человек видит свою цену, а не чей-то путь.`);
+      };
+    });
+    paint();
+    return true;
+  },
+  N8(stage, ctx) {
+    const parts = acts(stage, 'part'), res = out(stage, 'mix');
+    if (!parts.length) return false;
+    const TARGET = 1000000;
+    const total = parts.reduce((s2, p) => s2 + +p.dataset.sum, 0);
+    const names = { credits: 'Купленные кредиты', sub: 'Подписка', ref: 'Приглашённые' };
+    const normal = res.innerHTML;
+    let sticky = null;
+    const show = (p) => {
+      parts.forEach((x) => { if (p && x !== p) x.dataset.dim = 'true'; else x.removeAttribute('data-dim'); });
+      if (!p) { res.innerHTML = normal; return; }
+      const sum = +p.dataset.sum, share = Math.round((sum / total) * 100);
+      res.innerHTML = `<b class="blk-accent">${names[p.dataset.part]}: ${fmtN(sum)}</b> из ${fmtN(total)} оборота — это ${share} % шкалы и ${fmtN(+p.dataset.money)} ₽. ${p.dataset.how}.`;
+    };
+    parts.forEach((p) => {
+      p.onmouseenter = () => show(p); p.onmouseleave = () => show(sticky);
+      p.onfocus = () => show(p); p.onblur = () => show(sticky);
+      p.onclick = () => { sticky = sticky === p ? null : p; show(sticky); ctx.announce(sticky ? res.textContent : `Оборот квартала ${fmtN(total)} из ${fmtN(TARGET)}.`); };
+    });
+    return true;
+  },
+  N9(stage, ctx) {
+    const btn = q(stage, '[data-live-act="jump"]'), res = out(stage, 'pace');
+    const days = out(stage, 'days'), save = out(stage, 'save'), fill = out(stage, 'fill'), dlabel = out(stage, 'dlabel');
+    if (!btn) return false;
+    /* «0 дня» — брак: подпись согласуется с числом */
+    const dword = (n) => { const t = n % 100, o = n % 10; return t > 10 && t < 20 ? 'дней' : o === 1 ? 'день' : o > 1 && o < 5 ? 'дня' : 'дней'; };
+    let jumped = false;
+    const normal = res.innerHTML;
+    btn.onclick = () => {
+      jumped = !jumped;
+      if (jumped) {
+        tween(days, 83, 0, ''); tween(save, 6060, 9900, '');
+        dlabel.textContent = 'дней ждать не нужно';
+        fill.style.width = '100%';
+        btn.textContent = 'Идти как идёте';
+        res.innerHTML = 'Добор 660 000 стоит <b class="blk-accent">9 900 ₽</b> по прайсу. Цена тысячи визитов падает с 15 ₽ до 5,9 ₽ сразу, и на вашем расходе 8 000 визитов в день это <b class="blk-accent">2 184 ₽</b> в месяц назад. Вложение возвращается за <b class="blk-accent">136 дней</b>; если расход вырастет — быстрее.';
+        ctx.announce('Добор показан честно: цена пакета по прайсу, выгода посчитана на вашем расходе, срок окупаемости назван. Никакой срочности и никакого таймера.');
+      } else {
+        tween(days, 0, 83, ''); tween(save, 9900, 6060, '');
+        dlabel.textContent = `${dword(83)} на вашем темпе`;
+        fill.style.width = '34%';
+        btn.textContent = 'Добрать сейчас';
+        res.innerHTML = normal;
+        ctx.announce('Вернулись к текущему темпу: ступень придёт через 83 дня сама.');
+      }
+    };
     return true;
   },
   O2(stage, ctx) {
