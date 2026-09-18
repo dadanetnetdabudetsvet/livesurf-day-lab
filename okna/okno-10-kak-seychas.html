@@ -1129,6 +1129,68 @@
 .blk-gauge-marks .blk-tierlink:first-child b { color: #067A3D; }
 [data-bg='dark'] .blk-tierlink b { color: var(--ls-on-dark); }
 @media (prefers-reduced-motion: reduce) { .blk-tierlink span { transition: none; } }
+
+/* Месяц серии с растущим бонусом (O8): сетка месяца, огоньки, сцепка серии */
+.blk-monthnames { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 12px 0 6px; }
+.blk-monthnames span { text-align: center; font-size: 10px; font-weight: var(--ls-w-semibold); text-transform: uppercase; letter-spacing: .06em; color: var(--ls-ink-2); }
+[data-bg='dark'] .blk-monthnames span { color: var(--ls-on-dark-2); }
+.blk-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.blk-mday { position: relative; aspect-ratio: 1; border: 1px solid var(--ls-line); border-radius: var(--ls-radius-sm); background: var(--ls-white); color: var(--ls-ink-2); font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; display: grid; place-items: center; padding: 0; cursor: pointer; transition: transform .15s, border-color .15s; }
+.blk-mday svg { width: 62%; height: 62%; }
+.blk-mday[data-state='empty'] { border: 0; background: none; cursor: default; }
+.blk-mday[data-state='future'] { color: var(--ls-ink-2); }
+.blk-mday[data-state='missed'] { border-style: dashed; color: #8A5A00; background: rgba(245,166,35,.12); }
+.blk-mday[data-state='done'] { background: var(--ls-green); border-color: var(--ls-green); color: #fff; }
+.blk-mday[data-state='today'] { background: var(--ls-cyan-dark); border-color: var(--ls-cyan-dark); color: #fff; box-shadow: 0 0 0 3px var(--ls-cyan-soft); }
+/* наведённая клетка поднимается в стопке, иначе подсказка уходит под следующий ряд */
+.blk-mday:hover:not([data-state='empty']), .blk-mday:focus-visible { z-index: 6; }
+.blk-mday:hover:not([data-state='empty']) { transform: translateY(-1px); border-color: var(--ls-cyan); }
+.blk-mday:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+/* серия подряд — одной сцепкой, как в дневном трекере */
+.blk-mday[data-run='mid'], .blk-mday[data-run='start'], .blk-mday[data-run='end'] { border-radius: 4px; }
+.blk-mday[data-run='start'] { border-top-left-radius: var(--ls-radius-md); border-bottom-left-radius: var(--ls-radius-md); }
+.blk-mday[data-run='end'] { border-top-right-radius: var(--ls-radius-md); border-bottom-right-radius: var(--ls-radius-md); }
+.blk-mday[data-run]:not([data-run='solo'])::after { content: ''; position: absolute; inset: -3px -1px; border-top: 2px solid rgba(3,200,96,.55); border-bottom: 2px solid rgba(3,200,96,.55); pointer-events: none; }
+.blk-mday[data-run='start']::after { border-left: 2px solid rgba(3,200,96,.55); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.blk-mday[data-run='end']::after { border-right: 2px solid rgba(3,200,96,.55); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+.blk-mday .blk-bubble { width: 190px; }
+.blk-month > :nth-child(7n+1) .blk-bubble, .blk-month > :nth-child(7n+2) .blk-bubble { left: 0; transform: none; }
+.blk-month > :nth-child(7n+1) .blk-bubble::before, .blk-month > :nth-child(7n+2) .blk-bubble::before { left: 18px; margin-left: 0; }
+.blk-month > :nth-child(7n) .blk-bubble, .blk-month > :nth-child(7n+6) .blk-bubble { left: auto; right: 0; transform: none; }
+.blk-month > :nth-child(7n) .blk-bubble::before, .blk-month > :nth-child(7n+6) .blk-bubble::before { left: auto; right: 18px; margin-left: 0; }
+.blk-mday:hover > .blk-bubble, .blk-mday:focus-visible > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-mnav { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--ls-line); background: var(--ls-white); font-size: 17px; line-height: 1; color: inherit; cursor: pointer; }
+.blk-mnav:hover:not(:disabled) { border-color: var(--ls-cyan); color: var(--ls-cyan-text); }
+.blk-mnav:disabled { opacity: .4; cursor: default; }
+[data-bg='dark'] .blk-mnav, [data-bg='dark'] .blk-mday { background: var(--ls-glass); border-color: var(--ls-glass-line); color: var(--ls-on-dark-2); }
+.blk-claim { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 16px; border-radius: var(--ls-radius-md); background: var(--ls-cyan-soft); color: var(--ls-cyan-dark); }
+.blk-claim .ls-caption { margin-bottom: 6px; }
+.blk-claim .blk-wallet b { font-size: clamp(26px, 4vw, 34px); }
+@media (prefers-reduced-motion: reduce) { .blk-mday { transition: none; } }
+
+/* Следующий шаг после получения (I9): кольцо прогресса и статистика */
+.blk-steps-next { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.blk-step-card { position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: var(--ls-radius-md); background: var(--ls-bg-soft); border: 1px solid var(--ls-line); }
+[data-bg='dark'] .blk-step-card { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-step-card b { display: block; font-size: 14px; font-weight: var(--ls-w-semibold); }
+.blk-step-card span { display: block; margin-top: 2px; font-size: 12px; color: var(--ls-ink-2); }
+[data-bg='dark'] .blk-step-card span { color: var(--ls-on-dark-2); }
+.blk-step-card .blk-more { margin-top: 6px; }
+.blk-step-card .blk-bubble span { color: inherit; margin-top: 0; }
+.blk-step-card:hover > .blk-bubble, .blk-step-card:focus-within > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-step-card[data-in='true'] { animation: blk-rise .32s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes blk-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.blk-ring { width: 46px; height: 46px; flex: 0 0 46px; }
+.blk-ring circle { fill: none; stroke-width: 4; }
+.blk-ring-bg { stroke: var(--ls-line); }
+.blk-ring-fg { stroke: var(--ls-cyan); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset .9s cubic-bezier(.22,.61,.36,1); }
+.blk-ring text { font-family: var(--ls-font-display); font-size: 11px; font-weight: 600; fill: var(--ls-ink-2); }
+[data-bg='dark'] .blk-ring text { fill: var(--ls-on-dark-2); }
+[data-bg='dark'] .blk-ring-bg { stroke: var(--ls-glass-line); }
+@media (prefers-reduced-motion: reduce) {
+  .blk-step-card[data-in='true'] { animation: none; }
+  .blk-ring-fg { transition: none; }
+}
 </style>
 <style>
   html, body { margin: 0; height: 100%; }
@@ -2201,6 +2263,133 @@ const live = {
         res.innerHTML = normal;
         ctx.announce('Вернулись к текущему темпу: ступень придёт через 83 дня сама.');
       }
+    };
+    return true;
+  },
+  O8(stage, ctx) {
+    const days = acts(stage, 'day'), grid = q(stage, '.blk-month');
+    const sum = out(stage, 'sum'), grow = out(stage, 'grow'), month = out(stage, 'month');
+    const claim = q(stage, '[data-live-act="claim"]'), prev = q(stage, '[data-live-act="prev"]'), next = q(stage, '[data-live-act="next"]');
+    if (!days.length || !grid) return false;
+    const STEP = 40, CAP = 280;
+    const cells = qa(grid, '.blk-mday');
+    const cap = q(stage, '.ls-caption');
+    let claimed = false, shown = 200;
+    const nth = (n) => `${n}-го`;
+    /* сцепка соседних дней серии: рисуем рамку вокруг непрерывного отрезка */
+    const link = () => {
+      cells.forEach((c, k) => {
+        c.removeAttribute('data-run');
+        if (!['done', 'today'].includes(c.dataset.state)) return;
+        const near = (x) => x && ['done', 'today'].includes(x.dataset.state) && Math.floor(k / 7) === Math.floor(cells.indexOf(x) / 7);
+        const l = near(cells[k - 1]), r = near(cells[k + 1]);
+        c.dataset.run = l && r ? 'mid' : l ? 'end' : r ? 'start' : 'solo';
+      });
+    };
+    const streak = () => {
+      const today = cells.find((c) => c.dataset.state === 'today' || (claimed && c.dataset.claimed === 'true'));
+      let n = 0;
+      for (let k = cells.indexOf(today) - 1; k >= 0; k -= 1) {
+        const st = cells[k].dataset.state;
+        if (st === 'done') n += 1;
+        else if (st === 'missed') break;
+        else if (st !== 'empty') break;
+      }
+      return n;
+    };
+    const bonusFor = (dayNo) => Math.min(CAP, STEP * dayNo);
+    const paint = () => {
+      const run = streak() + (claimed ? 1 : 1);
+      const value = bonusFor(run);
+      tween(sum, shown, value, ''); shown = value;
+      cap.textContent = claimed ? `Начислено за ${nth(run)} день подряд` : `Бонус ${nth(run)} дня подряд`;
+      const left = Math.max(0, Math.ceil((CAP - value) / STEP));
+      grow.innerHTML = value >= CAP
+        ? `<b class="blk-accent">Потолок ${CAP} кредитов взят.</b> Дальше бонус не растёт: без потолка любая надбавка в кредитах превращается в кран эмиссии. Пропуск вернёт надбавку к ${STEP}.`
+        : `<b class="blk-accent">+${STEP} кредитов за каждый день без остановки</b>, потолок ${CAP} — это ещё ${left} ${left === 1 ? 'день' : left < 5 ? 'дня' : 'дней'} подряд. Пропуск обнуляет надбавку, но не день: 7 и 13 сентября трафик стоял, и бонус начинался заново с ${STEP}.`;
+      link();
+    };
+    days.forEach((d) => {
+      d.onclick = () => {
+        const b = q(d, '.blk-bubble');
+        ctx.announce(qa(b, 'b, span').map((x) => x.textContent).join('. '));
+      };
+    });
+    claim.onclick = async () => {
+      if (claimed) return;
+      claim.disabled = true; claim.textContent = 'Начисляем…';
+      await wait(500);
+      const today = cells.find((c) => c.dataset.state === 'today');
+      today.dataset.state = 'done'; today.dataset.claimed = 'true';
+      const tip = qa(q(today, '.blk-bubble'), 'span');
+      claimed = true;
+      const run = streak() + 1, value = bonusFor(run);
+      tip[0].textContent = 'трафик шёл весь день';
+      tip[1].textContent = `получено ${value} кредитов`;
+      claim.textContent = 'Получено ✓';
+      paint();
+      const flew = claimCelebration(claim);
+      const tomorrow = bonusFor(run + 1);
+      ctx.announce(`Начислено ${value} кредитов за ${nth(run)} день подряд. Завтра будет ${tomorrow}${tomorrow === CAP ? ' — это потолок' : ''}, если трафик не остановится.`
+        + (flew ? ' Празднование включено выключателем celebrateOnClaim в конфиге.' : ''));
+    };
+    /* прошлый месяц — история: смотреть можно, забирать нечего */
+    let back = false;
+    prev.onclick = () => {
+      back = !back;
+      month.textContent = back ? 'Август 2026' : 'Сентябрь 2026';
+      next.disabled = !back; prev.disabled = false;
+      grid.dataset.history = String(back);
+      claim.disabled = back || claimed;
+      grow.innerHTML = back
+        ? '<b class="blk-accent">Август: 23 дня из 31, лучшая серия 9 дней.</b> История показывает, сколько стоил каждый обрыв: три пропуска сбросили надбавку и стоили 480 кредитов.'
+        : grow.innerHTML;
+      if (!back) paint();
+      ctx.announce(back ? 'Прошлый месяц открыт как история: забрать в нём нечего, но видно, где рвалась серия.' : 'Вернулись в текущий месяц.');
+    };
+    next.onclick = () => { if (back) prev.onclick(); };
+    paint();
+    return true;
+  },
+  I9(stage, ctx) {
+    const claim = q(stage, '[data-live-act="claim"]'), panel = out(stage, 'panel');
+    const lead = out(stage, 'lead'), reset = out(stage, 'reset');
+    const cards = qa(stage, '.blk-step-card');
+    if (!claim || !cards.length) return false;
+    const C = 113.1;
+    const show = async () => {
+      for (const [k, card] of cards.entries()) {
+        card.hidden = false;
+        card.dataset.in = 'true';
+        const ring = q(card, '.blk-ring-fg');
+        const p = +card.dataset.now / +card.dataset.goal;
+        /* кольцо заполняется после появления карточки, иначе анимации спорят */
+        setTimeout(() => { ring.style.strokeDashoffset = String(C * (1 - p)); }, reduced ? 0 : 120);
+        if (!reduced && k < cards.length - 1) await wait(180);
+      }
+      qa(stage, '[data-live-act="go"]').forEach((btn) => {
+        btn.onclick = () => ctx.announce(`«${btn.textContent}» — демонстрация: в окне это ведёт в кабинет, в лаборатории только показывает, что действие есть.`);
+      });
+    };
+    claim.onclick = async () => {
+      claim.disabled = true; claim.textContent = 'Начисляем…';
+      await wait(500);
+      panel.innerHTML = '<div><p class="ls-caption">Начислено сегодня</p><div class="blk-wallet"><div><b data-plus="true">+200</b><span>кредитов</span></div></div></div><span class="ls-chip" data-tone="green">операция № DEMO-4417</span>';
+      lead.innerHTML = '<b class="blk-accent">Кнопки больше нет — есть следующий шаг.</b> Каждая строка считается по вашим действиям, а цифра рядом объясняет, зачем это делать.';
+      await show();
+      reset.hidden = false;
+      ctx.announce('Бонус начислен, и на месте кнопки появились три следующих шага: страницы в ротации, дни без остановки и приглашения. У каждого — своё кольцо прогресса и статистика, по которой видно, зачем это.');
+    };
+    reset.onclick = () => {
+      cards.forEach((card) => {
+        card.hidden = true; card.removeAttribute('data-in');
+        q(card, '.blk-ring-fg').style.strokeDashoffset = String(C);
+      });
+      panel.innerHTML = '<div><p class="ls-caption">Бонус за сегодняшний визит</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true">+200</b><span class="blk-explain">кредитов</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>начисляются на счёт сразу</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button>';
+      lead.textContent = 'Нажмите «Забрать» — на месте кнопки появятся следующие шаги по вашим действиям.';
+      reset.hidden = true;
+      live.I9(stage, ctx);
+      ctx.announce('Показано заново: кнопка на месте, шаги спрятаны.');
     };
     return true;
   },

@@ -1128,6 +1128,68 @@
 .blk-gauge-marks .blk-tierlink:first-child b { color: #067A3D; }
 [data-bg='dark'] .blk-tierlink b { color: var(--ls-on-dark); }
 @media (prefers-reduced-motion: reduce) { .blk-tierlink span { transition: none; } }
+
+/* Месяц серии с растущим бонусом (O8): сетка месяца, огоньки, сцепка серии */
+.blk-monthnames { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 12px 0 6px; }
+.blk-monthnames span { text-align: center; font-size: 10px; font-weight: var(--ls-w-semibold); text-transform: uppercase; letter-spacing: .06em; color: var(--ls-ink-2); }
+[data-bg='dark'] .blk-monthnames span { color: var(--ls-on-dark-2); }
+.blk-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.blk-mday { position: relative; aspect-ratio: 1; border: 1px solid var(--ls-line); border-radius: var(--ls-radius-sm); background: var(--ls-white); color: var(--ls-ink-2); font: inherit; font-size: 12px; font-variant-numeric: tabular-nums; display: grid; place-items: center; padding: 0; cursor: pointer; transition: transform .15s, border-color .15s; }
+.blk-mday svg { width: 62%; height: 62%; }
+.blk-mday[data-state='empty'] { border: 0; background: none; cursor: default; }
+.blk-mday[data-state='future'] { color: var(--ls-ink-2); }
+.blk-mday[data-state='missed'] { border-style: dashed; color: #8A5A00; background: rgba(245,166,35,.12); }
+.blk-mday[data-state='done'] { background: var(--ls-green); border-color: var(--ls-green); color: #fff; }
+.blk-mday[data-state='today'] { background: var(--ls-cyan-dark); border-color: var(--ls-cyan-dark); color: #fff; box-shadow: 0 0 0 3px var(--ls-cyan-soft); }
+/* наведённая клетка поднимается в стопке, иначе подсказка уходит под следующий ряд */
+.blk-mday:hover:not([data-state='empty']), .blk-mday:focus-visible { z-index: 6; }
+.blk-mday:hover:not([data-state='empty']) { transform: translateY(-1px); border-color: var(--ls-cyan); }
+.blk-mday:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+/* серия подряд — одной сцепкой, как в дневном трекере */
+.blk-mday[data-run='mid'], .blk-mday[data-run='start'], .blk-mday[data-run='end'] { border-radius: 4px; }
+.blk-mday[data-run='start'] { border-top-left-radius: var(--ls-radius-md); border-bottom-left-radius: var(--ls-radius-md); }
+.blk-mday[data-run='end'] { border-top-right-radius: var(--ls-radius-md); border-bottom-right-radius: var(--ls-radius-md); }
+.blk-mday[data-run]:not([data-run='solo'])::after { content: ''; position: absolute; inset: -3px -1px; border-top: 2px solid rgba(3,200,96,.55); border-bottom: 2px solid rgba(3,200,96,.55); pointer-events: none; }
+.blk-mday[data-run='start']::after { border-left: 2px solid rgba(3,200,96,.55); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.blk-mday[data-run='end']::after { border-right: 2px solid rgba(3,200,96,.55); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+.blk-mday .blk-bubble { width: 190px; }
+.blk-month > :nth-child(7n+1) .blk-bubble, .blk-month > :nth-child(7n+2) .blk-bubble { left: 0; transform: none; }
+.blk-month > :nth-child(7n+1) .blk-bubble::before, .blk-month > :nth-child(7n+2) .blk-bubble::before { left: 18px; margin-left: 0; }
+.blk-month > :nth-child(7n) .blk-bubble, .blk-month > :nth-child(7n+6) .blk-bubble { left: auto; right: 0; transform: none; }
+.blk-month > :nth-child(7n) .blk-bubble::before, .blk-month > :nth-child(7n+6) .blk-bubble::before { left: auto; right: 18px; margin-left: 0; }
+.blk-mday:hover > .blk-bubble, .blk-mday:focus-visible > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-mnav { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--ls-line); background: var(--ls-white); font-size: 17px; line-height: 1; color: inherit; cursor: pointer; }
+.blk-mnav:hover:not(:disabled) { border-color: var(--ls-cyan); color: var(--ls-cyan-text); }
+.blk-mnav:disabled { opacity: .4; cursor: default; }
+[data-bg='dark'] .blk-mnav, [data-bg='dark'] .blk-mday { background: var(--ls-glass); border-color: var(--ls-glass-line); color: var(--ls-on-dark-2); }
+.blk-claim { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 16px; border-radius: var(--ls-radius-md); background: var(--ls-cyan-soft); color: var(--ls-cyan-dark); }
+.blk-claim .ls-caption { margin-bottom: 6px; }
+.blk-claim .blk-wallet b { font-size: clamp(26px, 4vw, 34px); }
+@media (prefers-reduced-motion: reduce) { .blk-mday { transition: none; } }
+
+/* Следующий шаг после получения (I9): кольцо прогресса и статистика */
+.blk-steps-next { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.blk-step-card { position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: var(--ls-radius-md); background: var(--ls-bg-soft); border: 1px solid var(--ls-line); }
+[data-bg='dark'] .blk-step-card { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-step-card b { display: block; font-size: 14px; font-weight: var(--ls-w-semibold); }
+.blk-step-card span { display: block; margin-top: 2px; font-size: 12px; color: var(--ls-ink-2); }
+[data-bg='dark'] .blk-step-card span { color: var(--ls-on-dark-2); }
+.blk-step-card .blk-more { margin-top: 6px; }
+.blk-step-card .blk-bubble span { color: inherit; margin-top: 0; }
+.blk-step-card:hover > .blk-bubble, .blk-step-card:focus-within > .blk-bubble { opacity: 1; visibility: visible; }
+.blk-step-card[data-in='true'] { animation: blk-rise .32s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes blk-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.blk-ring { width: 46px; height: 46px; flex: 0 0 46px; }
+.blk-ring circle { fill: none; stroke-width: 4; }
+.blk-ring-bg { stroke: var(--ls-line); }
+.blk-ring-fg { stroke: var(--ls-cyan); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset .9s cubic-bezier(.22,.61,.36,1); }
+.blk-ring text { font-family: var(--ls-font-display); font-size: 11px; font-weight: 600; fill: var(--ls-ink-2); }
+[data-bg='dark'] .blk-ring text { fill: var(--ls-on-dark-2); }
+[data-bg='dark'] .blk-ring-bg { stroke: var(--ls-glass-line); }
+@media (prefers-reduced-motion: reduce) {
+  .blk-step-card[data-in='true'] { animation: none; }
+  .blk-ring-fg { transition: none; }
+}
 </style><style>
   :root { color-scheme: light; }
   [hidden] { display: none !important; }
@@ -1646,6 +1708,14 @@
 <p class="blk-t blk-t--muted">Бонус получен, кредиты направлены на blog.example. Завтра после 00:00 — новый бонус.</p>
 <div class="blk-mt"><button class="ls-btn ls-btn--sm ls-btn--ghost" type="button">Вернуться в кабинет</button></div>
 </section>
+<section class="cat-item" data-id="I9" data-group="I. Состояния и обратная связь"
+         data-title="Что делать дальше — после получения" data-purpose="Экран не заканчивается кнопкой. Забрал бонус — на его месте появляется короткий список следующих шагов: кольцо прогресса по вашим же действиям, одна строка статистики, по которой видно, зачем это, и ссылка на действие. Карточки выезжают по очереди, наведение объясняет, откуда взято число."
+         data-need="счётчики действий пользователя, когортная статистика по каждому шагу, события на каждое действие" data-verdict="Кандидат: закрывает пустоту после claim, но каждая строка статистики должна считаться, а не утверждаться" data-bg="light">
+<div class="blk-claim" data-live-out="panel"><div><p class="ls-caption">Бонус за сегодняшний визит</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true">+200</b><span class="blk-explain">кредитов</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>начисляются на счёт сразу</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
+<p class="blk-t blk-t--sm blk-mt-sm" data-live-out="lead">Нажмите «Забрать» — на месте кнопки появятся следующие шаги по вашим действиям.</p>
+<div class="blk-steps-next" data-live-host="next"><div class="blk-step-card" data-live-out="card1" data-now="3" data-goal="5" hidden><svg class="blk-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" class="blk-ring-bg"/><circle cx="22" cy="22" r="18" class="blk-ring-fg" style="stroke-dasharray:113.1;stroke-dashoffset:113.1"/><text x="22" y="26" text-anchor="middle">3/5</text></svg><div><b>Добавьте ещё 2 страницы</b><span>По статистике проект держит позиции, когда в ротации пять страниц, а не одна</span><button type="button" class="blk-more blk-more--plain" data-live-act="go">Добавить страницу</button></div><span class="blk-bubble" role="tooltip"><b>Откуда число</b><span>считаем по вашим проектам: 3 страницы в ротации из 5 в типовой связке</span></span></div><div class="blk-step-card" data-live-out="card2" data-now="5" data-goal="7" hidden><svg class="blk-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" class="blk-ring-bg"/><circle cx="22" cy="22" r="18" class="blk-ring-fg" style="stroke-dasharray:113.1;stroke-dashoffset:113.1"/><text x="22" y="26" text-anchor="middle">5/7</text></svg><div><b>Ещё 2 дня без остановки</b><span>По статистике позиции реагируют на седьмой день непрерывного трафика</span><button type="button" class="blk-more blk-more--plain" data-live-act="go">Проверить остаток кредитов</button></div><span class="blk-bubble" role="tooltip"><b>Откуда число</b><span>пятый день подряд идёт трафик; счётчик считает дни с визитами, а не заходы в кабинет</span></span></div><div class="blk-step-card" data-live-out="card3" data-now="1" data-goal="10" hidden><svg class="blk-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" class="blk-ring-bg"/><circle cx="22" cy="22" r="18" class="blk-ring-fg" style="stroke-dasharray:113.1;stroke-dashoffset:113.1"/><text x="22" y="26" text-anchor="middle">1/10</text></svg><div><b>Пригласите ещё 9 коллег</b><span>По статистике на одну покупку по вашей ссылке приходится около десяти приглашений</span><button type="button" class="blk-more blk-more--plain" data-live-act="go">Скопировать ссылку</button></div><span class="blk-bubble" role="tooltip"><b>Откуда число</b><span>по вашей ссылке зарегистрирован один человек; покупок пока нет</span></span></div></div>
+<button type="button" class="blk-more blk-more--plain" data-live-act="reset" hidden data-live-out="reset">Показать заново</button>
+</section>
 
 <!-- ===================== J. Личный результат ===================== -->
 <section class="cat-item" data-id="J1" data-group="J. Личный результат"
@@ -2120,6 +2190,15 @@
 <div class="blk-week blk-week--prizes blk-mt" data-live-host="streak"><div class="blk-day" data-state="done" data-live-act="sday" data-prize="+100 кредитов" data-day="24"><div class="blk-circle" aria-describedby="o7-tip-1"><b>+100</b><small>кр</small></div><div class="blk-dayname">пн</div><div class="blk-daynum"><span class="blk-dn-long">получено</span><span class="blk-dn-short">✓</span></div><span class="blk-bubble" role="tooltip" id="o7-tip-1"><b>+100 кредитов</b><span>понедельник · 24-й день серии</span><span>начислено автоматически: трафик шёл весь день</span></span></div><div class="blk-day" data-state="done" data-live-act="sday" data-prize="+120 кредитов" data-day="25"><div class="blk-circle" aria-describedby="o7-tip-2"><b>+120</b><small>кр</small></div><div class="blk-dayname">вт</div><div class="blk-daynum"><span class="blk-dn-long">получено</span><span class="blk-dn-short">✓</span></div><span class="blk-bubble" role="tooltip" id="o7-tip-2"><b>+120 кредитов</b><span>вторник · 25-й день серии</span><span>начислено автоматически: трафик шёл весь день</span></span></div><div class="blk-day" data-state="today" data-live-act="sday" data-prize="SEO-аудит проекта" data-day="26"><div class="blk-circle" aria-describedby="o7-tip-3"><b>SEO</b><small>аудит</small></div><div class="blk-dayname"><span class="blk-dn-long">сегодня</span><span class="blk-dn-short">ср</span></div><div class="blk-daynum"><span class="blk-dn-long">забрать</span><span class="blk-dn-short">взять</span></div><span class="blk-bubble" role="tooltip" id="o7-tip-3"><b>SEO-аудит проекта</b><span>среда · 26-й день серии · сегодня</span><span>нажмите, чтобы забрать: отчёт придёт на почту до конца недели</span></span></div><div class="blk-day" data-state="upcoming" data-live-act="sday" data-prize="Сутки приоритета 300 %" data-day="27"><div class="blk-circle" aria-describedby="o7-tip-4"><b>×3</b><small>приоритет</small></div><div class="blk-dayname">чт</div><div class="blk-daynum">27-й</div><span class="blk-bubble" role="tooltip" id="o7-tip-4"><b>Сутки приоритета 300 %</b><span>четверг · 27-й день серии</span><span>получите, если трафик не остановится; два пропуска в неделю серию не рвут</span></span></div><div class="blk-day" data-state="upcoming" data-live-act="sday" data-prize="+150 кредитов" data-day="28"><div class="blk-circle" aria-describedby="o7-tip-5"><b>+150</b><small>кр</small></div><div class="blk-dayname">пт</div><div class="blk-daynum">28-й</div><span class="blk-bubble" role="tooltip" id="o7-tip-5"><b>+150 кредитов</b><span>пятница · 28-й день серии</span><span>получите, если трафик не остановится; кредиты — в пределах месячного потолка</span></span></div><div class="blk-day" data-state="upcoming" data-live-act="sday" data-prize="Слот проекта на неделю" data-day="29"><div class="blk-circle" aria-describedby="o7-tip-6"><b>+1</b><small>слот</small></div><div class="blk-dayname">сб</div><div class="blk-daynum">29-й</div><span class="blk-bubble" role="tooltip" id="o7-tip-6"><b>Слот проекта на неделю</b><span>суббота · 29-й день серии</span><span>получите, если трафик не остановится; слот действует семь дней</span></span></div><div class="blk-day" data-state="prize" data-live-act="sday" data-prize="Буст всех ссылок проекта" data-day="30"><div class="blk-circle" aria-describedby="o7-tip-7"><b>★</b><small>буст</small></div><div class="blk-dayname">вс</div><div class="blk-daynum">30-й</div><span class="blk-bubble" role="tooltip" id="o7-tip-7"><b>Буст всех ссылок проекта</b><span>воскресенье · 30-й день серии</span><span>большая награда за месяц без остановки; после неё шкала начинается заново</span></span></div></div>
 <p class="blk-t blk-t--muted blk-t--sm blk-mt-sm" data-live-out="streak">Что и когда получите — видно сразу; наведите или нажмите на день, чтобы увидеть условие. Серия рвётся только остановкой трафика, два пропуска в неделю не считаются.</p>
 </section>
+<section class="cat-item" data-id="O8" data-group="O. Календарь и шкала наград"
+         data-title="Месяц серии и бонус, который растёт" data-purpose="Смесь двух вещей: месячная сетка, где каждый день без остановки трафика отмечен огоньком и соседние дни сцеплены в серию, и панель получения, где сумма растёт за каждый день подряд до потолка. Видно весь месяц сразу: где серия шла, где оборвалась и что это стоило. Наведение на день показывает, сколько он дал; кнопка забирает бонус сегодняшнего дня и продлевает серию."
+         data-need="дни с трафиком за месяц, счётчик серии, шаг и потолок бонуса, ручка claim с идемпотентным ключом" data-verdict="Кандидат: календарь-история вместо недельной полосы; потолок обязателен" data-bg="light">
+<div class="blk-row blk-row--between"><button type="button" class="blk-mnav" data-live-act="prev" aria-label="Предыдущий месяц">‹</button><div class="blk-h blk-h--sm" style="margin:0" data-live-out="month">Сентябрь 2026</div><button type="button" class="blk-mnav" data-live-act="next" aria-label="Следующий месяц" disabled>›</button></div>
+<div class="blk-monthnames"><span>пн</span><span>вт</span><span>ср</span><span>чт</span><span>пт</span><span>сб</span><span>вс</span></div>
+<div class="blk-month" data-live-host="month"><span class="blk-mday" data-state="empty" aria-hidden="true"></span><button type="button" class="blk-mday" data-state="done" data-day="1" data-live-act="day" aria-label="1 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>1 сентября</b><span>трафик шёл весь день</span><span>получено 40 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="2" data-live-act="day" aria-label="2 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>2 сентября</b><span>трафик шёл весь день</span><span>получено 80 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="3" data-live-act="day" aria-label="3 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>3 сентября</b><span>трафик шёл весь день</span><span>получено 120 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="4" data-live-act="day" aria-label="4 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>4 сентября</b><span>трафик шёл весь день</span><span>получено 160 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="5" data-live-act="day" aria-label="5 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>5 сентября</b><span>трафик шёл весь день</span><span>получено 200 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="6" data-live-act="day" aria-label="6 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>6 сентября</b><span>трафик шёл весь день</span><span>получено 240 кредитов</span></span></button><button type="button" class="blk-mday" data-state="missed" data-day="7" data-live-act="day" aria-label="7 сентября">7<span class="blk-bubble" role="tooltip"><b>7 сентября: пропуск</b><span>трафик в этот день не шёл</span><span>серия обнулилась, бонус вернулся к 40</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="8" data-live-act="day" aria-label="8 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>8 сентября</b><span>трафик шёл весь день</span><span>получено 40 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="9" data-live-act="day" aria-label="9 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>9 сентября</b><span>трафик шёл весь день</span><span>получено 80 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="10" data-live-act="day" aria-label="10 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>10 сентября</b><span>трафик шёл весь день</span><span>получено 120 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="11" data-live-act="day" aria-label="11 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>11 сентября</b><span>трафик шёл весь день</span><span>получено 160 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="12" data-live-act="day" aria-label="12 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>12 сентября</b><span>трафик шёл весь день</span><span>получено 200 кредитов</span></span></button><button type="button" class="blk-mday" data-state="missed" data-day="13" data-live-act="day" aria-label="13 сентября">13<span class="blk-bubble" role="tooltip"><b>13 сентября: пропуск</b><span>трафик в этот день не шёл</span><span>серия обнулилась, бонус вернулся к 40</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="14" data-live-act="day" aria-label="14 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>14 сентября</b><span>трафик шёл весь день</span><span>получено 40 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="15" data-live-act="day" aria-label="15 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>15 сентября</b><span>трафик шёл весь день</span><span>получено 80 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="16" data-live-act="day" aria-label="16 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>16 сентября</b><span>трафик шёл весь день</span><span>получено 120 кредитов</span></span></button><button type="button" class="blk-mday" data-state="done" data-day="17" data-live-act="day" aria-label="17 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>17 сентября</b><span>трафик шёл весь день</span><span>получено 160 кредитов</span></span></button><button type="button" class="blk-mday" data-state="today" data-day="18" data-live-act="day" aria-label="18 сентября"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.6 3.2-1 4.7-2.6 6.2C7.6 9.9 6 11.6 6 14.4 6 18 8.7 21 12 21s6-3 6-6.6c0-2.4-1.1-3.9-2.3-5.3-.6.8-1.3 1.2-2 1.2 1-2.8-.3-6.1-1.7-8.3z" fill="currentColor"/><path d="M12 21c-1.8 0-3.2-1.6-3.2-3.5 0-1.6 1-2.5 1.8-3.3.5-.5 1-1 1.2-1.7.6.9 1.2 1.4 1.8 2 .9.9 1.6 1.8 1.6 3 0 1.9-1.4 3.5-3.2 3.5z" fill="rgba(255,255,255,.55)"/></svg><span class="blk-bubble" role="tooltip"><b>Сегодня, 18 сентября</b><span>трафик идёт: день засчитан</span><span>нажмите «Забрать» — бонус 5-го дня подряд</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="19" data-live-act="day" aria-label="19 сентября">19<span class="blk-bubble" role="tooltip"><b>19 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="20" data-live-act="day" aria-label="20 сентября">20<span class="blk-bubble" role="tooltip"><b>20 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="21" data-live-act="day" aria-label="21 сентября">21<span class="blk-bubble" role="tooltip"><b>21 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="22" data-live-act="day" aria-label="22 сентября">22<span class="blk-bubble" role="tooltip"><b>22 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="23" data-live-act="day" aria-label="23 сентября">23<span class="blk-bubble" role="tooltip"><b>23 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="24" data-live-act="day" aria-label="24 сентября">24<span class="blk-bubble" role="tooltip"><b>24 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="25" data-live-act="day" aria-label="25 сентября">25<span class="blk-bubble" role="tooltip"><b>25 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="26" data-live-act="day" aria-label="26 сентября">26<span class="blk-bubble" role="tooltip"><b>26 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="27" data-live-act="day" aria-label="27 сентября">27<span class="blk-bubble" role="tooltip"><b>27 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="28" data-live-act="day" aria-label="28 сентября">28<span class="blk-bubble" role="tooltip"><b>28 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="29" data-live-act="day" aria-label="29 сентября">29<span class="blk-bubble" role="tooltip"><b>29 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><button type="button" class="blk-mday" data-state="future" data-day="30" data-live-act="day" aria-label="30 сентября">30<span class="blk-bubble" role="tooltip"><b>30 сентября</b><span>ещё не наступило</span><span>бонус будет больше, если серия не прервётся</span></span></button><span class="blk-mday" data-state="empty" aria-hidden="true"></span><span class="blk-mday" data-state="empty" aria-hidden="true"></span><span class="blk-mday" data-state="empty" aria-hidden="true"></span><span class="blk-mday" data-state="empty" aria-hidden="true"></span></div>
+<div class="blk-claim blk-mt" data-live-out="panel"><div><p class="ls-caption">Бонус пятого дня подряд</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true" data-live-out="sum">200</b><span class="blk-explain">кредитов</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>бонус начисляется на счёт сразу, без перехода на другую страницу</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
+<p class="blk-t blk-t--sm blk-mt-sm" data-live-out="grow"><b class="blk-accent">+40 кредитов за каждый день без остановки</b>, потолок 280 на седьмой день. Пропуск обнуляет надбавку, но не день: 7 и 13 сентября трафик стоял — и бонус начинался заново с 40.</p>
+</section>
 
 <section class="cat-item" data-id="Z11" data-group="Z. Как сейчас — не брать"
          data-title="Сгоревшая награда показана вдвое больше настоящей" data-purpose="Идея усилить чувство потери, показывая несобранную награду больше, чем она была. Это недостоверные сведения об условиях акции: наказывается по факту, без оценки влияния на конверсию."
@@ -2390,7 +2469,7 @@ const core = new Set(
    "I1 I2 I3 I4 I5 I6 J1 J6 J7 J8 J9 K1 L1 L2 L6 L8 M1 M2 M3 M4 N1 N2 N3 N4 N6").split(" "),
 );
 const later = new Set("A6 E6 F4 F6 G4 G6 J5 K10".split(" "));
-const experiment = new Set("A4 B7 D6 E5 F5 G5 J4 K2 K3 K6 K9 L4 L5 L7 M7 N5 O1 O2 O5 O7 B9 B10 N8 N9".split(" "));
+const experiment = new Set("A4 B7 D6 E5 F5 G5 J4 K2 K3 K6 K9 L4 L5 L7 M7 N5 O1 O2 O5 O7 O8 B9 B10 N8 N9 I9".split(" "));
 const avoid = new Set("Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11".split(" "));
 
 const only = {
@@ -2448,7 +2527,7 @@ const only = {
   N5: ["owner"],
   N6: ["owner", "newcomer"],
   O1: ["owner", "earner", "returning"], O2: ["owner", "earner"], O3: ["owner", "returning"],
-  O4: ["owner", "earner"], O5: ["owner"], O6: ["owner", "returning"], O7: ["owner", "earner"],
+  O4: ["owner", "earner"], O5: ["owner"], O6: ["owner", "returning"], O7: ["owner", "earner"], O8: ["owner", "earner", "returning"],
 };
 
 /* --- Доказательность: уровень, источник и чего из него брать нельзя ------ */
@@ -2497,6 +2576,8 @@ const evidence = {
   O4: { level: "📏", src: "138-ФЗ; практика ФАС по стимулирующим мероприятиям (Пятёрочка — 300 тыс. ₽ за розыгрыш без существенной информации)", not: "—" },
   O5: { level: "📏", src: "Kivetz, Urminsky & Zheng 2006: градиент цели; post-reward reset обязателен", not: "Далёкая цель эффекта не даёт." },
   O6: { level: "📏", src: "UX-04; GitHub убрал стрики в 2016; Sharif & Shu 2016 — резерв вместо гильотины", not: "—" },
+  I9: { level: "📏", src: "Kivetz et al. 2006 — близкая видимая цель ускоряет; аудит: после claim окно пустеет, следующий шаг не предложен (PROD-30); формат «сколько осталось до типовой нормы» взят из рекрутинговых сервисов", not: "Каждая строка статистики обязана считаться по когорте, иначе это заявление. Сегодня посчитать нечем: setUserID не вызывается, 91 из 127 целей мертвы — сначала события, потом обещания." },
+  O8: { level: "📰", src: "Месячный календарь серии — механика дневных трекеров (Duolingo); растущая надбавка за дни подряд есть в текущем окне LiveSurf; Deci et al. 1999 — награда за участие имеет отрицательный знак", not: "Считаем дни с трафиком, а не заходы в кабинет, иначе это стрик входа (UX-04). Надбавка обязана иметь потолок: без него это кран эмиссии (ECON-11). История прошлых месяцев — только просмотр." },
   O7: { level: "📰", src: "Duolingo: серия держится на прощении пропуска и на том, что следующая награда видна; Kivetz, Urminsky & Zheng 2006 — близкая видимая цель ускоряет; изолированных замеров «награда в каждом дне серии» нет", not: "«+N % удержания» из вендорских блогов не переносить. Серия считается по дням трафика, как в A1, а не по входам." },
   Z11: { level: "📏", src: "ФЗ «О рекламе» ст. 5 (недостоверные сведения), ЗоЗПП ст. 10 (право на достоверную информацию); ЕС UCPD Приложение I", not: "—" },
   Z1: { level: "📏", src: "UX-03; PROD-30: из четырёх блоков окна один отдаёт ценность, три продают", not: "—" },
@@ -2548,6 +2629,8 @@ const lenses = {
   O3: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём", why: "правдивой суммы достаточно: потеря и так весит вдвое больше выгоды" },
   O4: { l1: "—", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "условие для O1", why: "без опубликованного пула механика не запускается" },
   O6: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "✓", curator: "берём вместо ежедневного сбора", why: "календарь с добором не спорит с обещанием автономной работы" },
+  I9: { l1: "✓", l2: "✓", l3: "✓", l4: "—", l5: "◐", curator: "берём после claim вместо пустого экрана", why: "ведёт к действию, которое влияет на результат, а не к повторному входу" },
+  O8: { l1: "✓", l2: "◐", l3: "✓", l4: "—", l5: "◐", curator: "кандидат: показывает месяц целиком и цену обрыва", why: "история видна сразу, надбавка с потолком, дни считаются по трафику" },
   O7: { l1: "✓", l2: "◐", l3: "✓", l4: "—", l5: "✓", curator: "берём вместо A1, когда серии нужна награда", why: "что и когда получишь — видно без наведения; каждый тип награды защищается экономикой отдельно" },
   Z11: { l1: "✗", l2: "✗", l3: "✗", l4: "—", l5: "✗", curator: "не брать никогда", why: "показанная сумма не равна настоящей — это недостоверные сведения об акции" },
   Z1: { l1: "✗", l2: "◐", l3: "✗", l4: "—", l5: "✗", curator: "не брать", why: "три блока продажи на один блок ценности" },
@@ -2585,6 +2668,8 @@ const econ = {
   O1: { credits: 130, per: "day", cap: true, vest: false, note: "средняя награда календаря при опубликованном пуле; потолок месяца — calendarMonthlyCapCredits" },
   O2: { credits: 150, per: "day", cap: true, vest: false, note: "шкала разных наград: кредитами платят не каждый день, остальное — услуги и приоритет" },
   O5: { credits: 0, per: "none", cap: true, vest: false, note: "награда за полный месяц — буст, а не кредиты" },
+  I9: { credits: 0, per: "none", cap: true, vest: false, note: "следующий шаг ничего не эмитирует: подсказка, а не награда" },
+  O8: { credits: 200, per: "day", cap: true, vest: false, note: "растущая надбавка 40 за день подряд, потолок 280 на седьмой; при серии выдача около 200 в день" },
   O7: { credits: 120, per: "day", cap: true, vest: false, note: "серия с наградой в каждом дне: кредиты через день в среднем 120, остальное — услуга, приоритет, ёмкость; тридцатый день — буст, не эмиссия" },
   Z2: { credits: 5000, per: "day", cap: false, vest: false, note: "то самое обещание рядом с наградой в 73 кредита" },
   Z6: { credits: 0, per: "day", cap: true, vest: false, note: "кредитов не эмитирует, но перераспределяет фиксированный поток — для части пользователей это минус" },
@@ -2633,6 +2718,8 @@ const signals = {
   O4: { signal: "none", event: "утверждённый пул и правила акции" },
   O5: { signal: "none", event: "счётчик собранных дней месяца" },
   O6: { signal: "none", event: "окно добора и правило месяца" },
+  I9: { signal: "none", event: "счётчиков шагов и когортной статистики нет: нужны события на страницу, день трафика и приглашение" },
+  O8: { signal: "none", event: "календаря серии нет: нужны дни с трафиком за месяц, счётчик серии, шаг, потолок и событие streak_bonus_claimed" },
   O7: { signal: "none", event: "серии с наградами нет: нужны правила по дням серии, журнал выдач и месячный потолок" },
   Z11: { signal: "have", event: "ничего измерять не нужно — механику брать нельзя" },
 };
@@ -2666,7 +2753,7 @@ const findings = {
   N1: "UX-03", N2: "UX-03", N3: "ECON-16", N5: "ECON-16", N6: "ECON-16",
   Z1: "UX-03", Z2: "ECON-11", Z3: "UX-03", Z4: "UX-03", Z5: "ECON-16",
   Z6: "PROD-32", Z7: "UX-04", Z8: "UX-03", Z9: "UX-03", Z10: "—", Z11: "UX-03",
-  O1: "PROD-30", O2: "PROD-30", O3: "UX-03", O4: "SEC-19", O5: "PROD-30", O6: "UX-04", O7: "UX-04",
+  O1: "PROD-30", O2: "PROD-30", O3: "UX-03", O4: "SEC-19", O5: "PROD-30", O6: "UX-04", O7: "UX-04", O8: "UX-04", I9: "PROD-30",
 };
 
 const practice = {
@@ -2707,6 +2794,8 @@ const practice = {
   O3: "Неприятие потери (Kahneman, Tversky, 1979): правдивая сумма и так весит вдвое больше выгоды.",
   O5: "Градиент цели (Kivetz, Urminsky, Zheng, 2006) с обязательным сбросом после награды.",
   O6: "Резерв вместо гильотины (Sharif & Shu, 2016): добор вместо ежедневного сбора.",
+  I9: "Следующий шаг вместо пустого экрана: кольцо прогресса по действиям и статистика, зачем это.",
+  O8: "Месяц серии целиком: видно, где она рвалась и чего это стоило; надбавка растёт до потолка.",
   O7: "Видимая следующая награда (Kivetz, Urminsky, Zheng, 2006) и прощение пропуска (Duolingo): серия по трафику, а не по входу.",
 };
 
@@ -2833,6 +2922,8 @@ const notes = {
   O4: "Состав пула, шансы, сроки и правила публикуются до начала месяца. Это то, что отличает стимулирующее мероприятие от лотереи.",
   O5: "Цель достижима и видна; после награды сбрасывается, и следующая видна сразу.",
   O6: "Окно добора снимает главное возражение к календарю: продукт обещает автономную работу, а ежедневный сбор требует обратного.",
+  I9: "Появляется по нажатию: забрал бонус — кнопка исчезла, на её месте три следующих шага. У каждого кольцо прогресса по действиям самого человека (страницы в ротации, дни без остановки, приглашения), одна строка статистики, зачем это делать, и ссылка на действие. Карточки выезжают по очереди, кольца заполняются после появления, наведение объясняет, откуда взято число. Главное ограничение: каждая строка статистики должна считаться по когорте — сегодня событий для этого нет, поэтому блок идёт после первого шага плана, а не до него.",
+  O8: "Смесь месячного трекера и панели получения. Сетка месяца: день с трафиком — огонёк, соседние дни серии сцеплены рамкой, пропуски видны отдельно, будущие дни — просто числа. Наведение или фокус на дне говорит, что в нём было и сколько он дал. Панель забирает бонус текущего дня: он растёт на 40 кредитов за каждый день подряд и упирается в потолок 280 на седьмой — без потолка растущая надбавка становится краном эмиссии (ECON-11). Пропуск обнуляет надбавку, а не день. Стрелка влево открывает прошлый месяц как историю: забрать нечего, но видно цену каждого обрыва. Дни считаются по трафику, а не по заходам в кабинет.",
   O7: "Награда в каждом дне серии видна без наведения: в кружке — что, под ним — получено, забрать или какой день. При наведении, фокусе или нажатии — полная награда, дата и условие; на телефоне пузырь открывается тапом. Серия считается по дням трафика, два пропуска в неделю её не рвут. Рядом с A1 не ставить: это одна серия дважды.",
   Z11: "Идея показывать несобранную награду вдвое больше настоящей. Не реализуется: это ложь пользователю о его же награде. Честная версия — O3, и она работает: потеря и так весит вдвое больше равной выгоды.",
   Z1: "Так выглядит окно сегодня. В сборку добавляется, чтобы линт показал, что именно не так.",
@@ -2849,7 +2940,7 @@ const notes = {
 
 /* Когда блок появился. Библиотека по умолчанию сортируется по новизне:
    иначе новые блоки теряются в середине шестнадцати групп. */
-const latestIds = new Set("O7 B9 B10 N7 N8 N9".split(" "));
+const latestIds = new Set("O7 O8 I9 B9 B10 N7 N8 N9".split(" "));
 const reworkedIds = new Set(["O2"]);
 const cohorts = [
   { key: "latest", label: "Добавлено последним", note: "правки по замечаниям владельца 18 сентября", badge: "Новое" },
@@ -3329,6 +3420,10 @@ function lint(ids, blocks = []) {
   if (has('O2') && has('B1')) w.push('O2 шкала разных наград рядом с обычным «Забрать бонус дня» (B1): человек увидит две разные награды за один день. Оставьте одну механику.');
   if (has('O2') && !has('H1')) w.push('O2 обнуляет серию при пропуске: правило и предупреждение перед разрывом должны быть в настройках уведомлений (H1), иначе обнуление станет сюрпризом.');
   if (has('O7') && has('A1')) w.push('O7 и A1 — одна серия дней без остановки дважды: оставьте A1 без наград или O7 с наградами.');
+  const streaks = ['A1', 'O2', 'O7', 'O8'].filter(has);
+  if (streaks.length > 1) w.push(`Серия дней показана дважды: ${streaks.join(', ')}. Это разные подачи одной механики — в окно идёт одна.`);
+  if (has('O8') && !has('H4')) w.push('O8 календарь серии с растущей надбавкой без H4: человек должен уметь отключить автопоказ окна, иначе ежедневная петля навязана.');
+  if (has('I9') && !ids.some((id) => /^(B1|B9|B10|O8)$/.test(id))) w.push('I9 показывает следующий шаг после получения, но в сборке нет блока с начислением: появляться будет не после чего.');
   if (has('O7') && has('O2')) w.push('O7 и O2 — две шкалы наград на одном экране: недельная O2 и серийная O7 будут обещать разное за один и тот же день.');
   if (has('O7') && has('B1')) w.push('O7 награда дня серии рядом с обычным «Забрать бонус дня» (B1): два начисления за один день. Оставьте одно.');
   /* объединённые карточки бонуса и статуса */
@@ -4365,6 +4460,133 @@ const live = {
         res.innerHTML = normal;
         ctx.announce('Вернулись к текущему темпу: ступень придёт через 83 дня сама.');
       }
+    };
+    return true;
+  },
+  O8(stage, ctx) {
+    const days = acts(stage, 'day'), grid = q(stage, '.blk-month');
+    const sum = out(stage, 'sum'), grow = out(stage, 'grow'), month = out(stage, 'month');
+    const claim = q(stage, '[data-live-act="claim"]'), prev = q(stage, '[data-live-act="prev"]'), next = q(stage, '[data-live-act="next"]');
+    if (!days.length || !grid) return false;
+    const STEP = 40, CAP = 280;
+    const cells = qa(grid, '.blk-mday');
+    const cap = q(stage, '.ls-caption');
+    let claimed = false, shown = 200;
+    const nth = (n) => `${n}-го`;
+    /* сцепка соседних дней серии: рисуем рамку вокруг непрерывного отрезка */
+    const link = () => {
+      cells.forEach((c, k) => {
+        c.removeAttribute('data-run');
+        if (!['done', 'today'].includes(c.dataset.state)) return;
+        const near = (x) => x && ['done', 'today'].includes(x.dataset.state) && Math.floor(k / 7) === Math.floor(cells.indexOf(x) / 7);
+        const l = near(cells[k - 1]), r = near(cells[k + 1]);
+        c.dataset.run = l && r ? 'mid' : l ? 'end' : r ? 'start' : 'solo';
+      });
+    };
+    const streak = () => {
+      const today = cells.find((c) => c.dataset.state === 'today' || (claimed && c.dataset.claimed === 'true'));
+      let n = 0;
+      for (let k = cells.indexOf(today) - 1; k >= 0; k -= 1) {
+        const st = cells[k].dataset.state;
+        if (st === 'done') n += 1;
+        else if (st === 'missed') break;
+        else if (st !== 'empty') break;
+      }
+      return n;
+    };
+    const bonusFor = (dayNo) => Math.min(CAP, STEP * dayNo);
+    const paint = () => {
+      const run = streak() + (claimed ? 1 : 1);
+      const value = bonusFor(run);
+      tween(sum, shown, value, ''); shown = value;
+      cap.textContent = claimed ? `Начислено за ${nth(run)} день подряд` : `Бонус ${nth(run)} дня подряд`;
+      const left = Math.max(0, Math.ceil((CAP - value) / STEP));
+      grow.innerHTML = value >= CAP
+        ? `<b class="blk-accent">Потолок ${CAP} кредитов взят.</b> Дальше бонус не растёт: без потолка любая надбавка в кредитах превращается в кран эмиссии. Пропуск вернёт надбавку к ${STEP}.`
+        : `<b class="blk-accent">+${STEP} кредитов за каждый день без остановки</b>, потолок ${CAP} — это ещё ${left} ${left === 1 ? 'день' : left < 5 ? 'дня' : 'дней'} подряд. Пропуск обнуляет надбавку, но не день: 7 и 13 сентября трафик стоял, и бонус начинался заново с ${STEP}.`;
+      link();
+    };
+    days.forEach((d) => {
+      d.onclick = () => {
+        const b = q(d, '.blk-bubble');
+        ctx.announce(qa(b, 'b, span').map((x) => x.textContent).join('. '));
+      };
+    });
+    claim.onclick = async () => {
+      if (claimed) return;
+      claim.disabled = true; claim.textContent = 'Начисляем…';
+      await wait(500);
+      const today = cells.find((c) => c.dataset.state === 'today');
+      today.dataset.state = 'done'; today.dataset.claimed = 'true';
+      const tip = qa(q(today, '.blk-bubble'), 'span');
+      claimed = true;
+      const run = streak() + 1, value = bonusFor(run);
+      tip[0].textContent = 'трафик шёл весь день';
+      tip[1].textContent = `получено ${value} кредитов`;
+      claim.textContent = 'Получено ✓';
+      paint();
+      const flew = claimCelebration(claim);
+      const tomorrow = bonusFor(run + 1);
+      ctx.announce(`Начислено ${value} кредитов за ${nth(run)} день подряд. Завтра будет ${tomorrow}${tomorrow === CAP ? ' — это потолок' : ''}, если трафик не остановится.`
+        + (flew ? ' Празднование включено выключателем celebrateOnClaim в конфиге.' : ''));
+    };
+    /* прошлый месяц — история: смотреть можно, забирать нечего */
+    let back = false;
+    prev.onclick = () => {
+      back = !back;
+      month.textContent = back ? 'Август 2026' : 'Сентябрь 2026';
+      next.disabled = !back; prev.disabled = false;
+      grid.dataset.history = String(back);
+      claim.disabled = back || claimed;
+      grow.innerHTML = back
+        ? '<b class="blk-accent">Август: 23 дня из 31, лучшая серия 9 дней.</b> История показывает, сколько стоил каждый обрыв: три пропуска сбросили надбавку и стоили 480 кредитов.'
+        : grow.innerHTML;
+      if (!back) paint();
+      ctx.announce(back ? 'Прошлый месяц открыт как история: забрать в нём нечего, но видно, где рвалась серия.' : 'Вернулись в текущий месяц.');
+    };
+    next.onclick = () => { if (back) prev.onclick(); };
+    paint();
+    return true;
+  },
+  I9(stage, ctx) {
+    const claim = q(stage, '[data-live-act="claim"]'), panel = out(stage, 'panel');
+    const lead = out(stage, 'lead'), reset = out(stage, 'reset');
+    const cards = qa(stage, '.blk-step-card');
+    if (!claim || !cards.length) return false;
+    const C = 113.1;
+    const show = async () => {
+      for (const [k, card] of cards.entries()) {
+        card.hidden = false;
+        card.dataset.in = 'true';
+        const ring = q(card, '.blk-ring-fg');
+        const p = +card.dataset.now / +card.dataset.goal;
+        /* кольцо заполняется после появления карточки, иначе анимации спорят */
+        setTimeout(() => { ring.style.strokeDashoffset = String(C * (1 - p)); }, reduced ? 0 : 120);
+        if (!reduced && k < cards.length - 1) await wait(180);
+      }
+      qa(stage, '[data-live-act="go"]').forEach((btn) => {
+        btn.onclick = () => ctx.announce(`«${btn.textContent}» — демонстрация: в окне это ведёт в кабинет, в лаборатории только показывает, что действие есть.`);
+      });
+    };
+    claim.onclick = async () => {
+      claim.disabled = true; claim.textContent = 'Начисляем…';
+      await wait(500);
+      panel.innerHTML = '<div><p class="ls-caption">Начислено сегодня</p><div class="blk-wallet"><div><b data-plus="true">+200</b><span>кредитов</span></div></div></div><span class="ls-chip" data-tone="green">операция № DEMO-4417</span>';
+      lead.innerHTML = '<b class="blk-accent">Кнопки больше нет — есть следующий шаг.</b> Каждая строка считается по вашим действиям, а цифра рядом объясняет, зачем это делать.';
+      await show();
+      reset.hidden = false;
+      ctx.announce('Бонус начислен, и на месте кнопки появились три следующих шага: страницы в ротации, дни без остановки и приглашения. У каждого — своё кольцо прогресса и статистика, по которой видно, зачем это.');
+    };
+    reset.onclick = () => {
+      cards.forEach((card) => {
+        card.hidden = true; card.removeAttribute('data-in');
+        q(card, '.blk-ring-fg').style.strokeDashoffset = String(C);
+      });
+      panel.innerHTML = '<div><p class="ls-caption">Бонус за сегодняшний визит</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true">+200</b><span class="blk-explain">кредитов</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>начисляются на счёт сразу</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button>';
+      lead.textContent = 'Нажмите «Забрать» — на месте кнопки появятся следующие шаги по вашим действиям.';
+      reset.hidden = true;
+      live.I9(stage, ctx);
+      ctx.announce('Показано заново: кнопка на месте, шаги спрятаны.');
     };
     return true;
   },
