@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:,">
+<title>LiveSurf — куда встраивается ежедневное окно</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; padding: 40px 24px 80px; background: #fff; color: #191E34; font: 400 16px/1.6 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 24px; }
+  h2 { font-size: 26px; line-height: 1.2; margin: 44px 0 14px; padding-top: 18px; border-top: 2px solid #E3EBEE; }
+  h3 { font-size: 20px; margin: 28px 0 10px; }
+  h4 { font-size: 17px; margin: 22px 0 8px; }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 16px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  code { background: #F9FAFC; border-radius: 6px; padding: 1px 5px; font-family: ui-monospace, Menlo, monospace; font-size: .92em; }
+  pre { background: #0C363D; color: #fff; padding: 16px 18px; border-radius: 12px; overflow-x: auto; }
+  pre code { background: none; color: inherit; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 20px; font-size: 14px; }
+  th { text-align: left; padding: 10px 12px; border-bottom: 2px solid #E3EBEE; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #5A6272; }
+  td { padding: 10px 12px; border-bottom: 1px solid #E3EBEE; vertical-align: top; }
+  a { color: #0E7C8E; }
+  b { font-weight: 600; }
+  @media print { body { padding: 0; } h2 { break-after: avoid; } }
+</style>
+</head><body><main>
+<h1>LiveSurf — куда встраивается ежедневное окно</h1>
+<p>Составлено 17.09.2026 по репозиторию <code>~/Documents/landings-for-projects/projects/livesurf-frontent-vue</code> (чтение, без правок).</p>
+<h2>Своя система модалок у кабинета уже есть</h2>
+<table><thead><tr><th>Файл</th><th>Роль</th></tr></thead><tbody>
+<tr><td><code>shared/constants/modals.js</code></td><td><code>MODAL_KIND</code> (popup / upsale / signal) и <code>MODAL_TYPE</code>: <code>everyday-welcome</code>, <code>everyday-bonus</code>, <code>level-up</code>, апселлы</td></tr>
+<tr><td><code>shared/components/modals/registry.js</code></td><td>тип → ленивый компонент + флаги <code>closeOnBackdrop</code>, <code>skipAutoClose</code></td></tr>
+<tr><td><code>shared/composables/useModalStack.js</code></td><td>стек <code>shell.modals[]</code>: элементы показываются <b>по одному в FIFO-порядке</b>, следующий — после закрытия</td></tr>
+<tr><td><code>shared/components/modals/popup/EverydayBonusModal.vue</code></td><td>текущее окно бонуса: props <code>credits</code>, <code>skill</code>, <code>user_level</code>, <code>breakdown.{visits,status,subscription}</code></td></tr>
+<tr><td><code>shared/components/modals/popup/EverydayWelcomeModal.vue</code></td><td>приветствие с ссылкой на программу и рефералами</td></tr>
+<tr><td><code>shared/components/modals/popup/LevelUpModal.vue</code></td><td>новый уровень: <code>level</code>, <code>credits</code>, <code>skill</code>, <code>pro_days</code>, <code>vip_days</code>, <code>avatar_url</code></td></tr>
+<tr><td><code>shared/components/modals/PopupModal.vue</code></td><td>обёртка popup-типа: бейдж, заголовок, описание, слоты</td></tr>
+<tr><td><code>shared/assets/styles/modals.css</code></td><td><code>.ls-modal-badge</code> и его тона (gold, purple, neutral, danger)</td></tr>
+<tr><td><code>shared/stores/shell-store.js</code></td><td><code>bonus_count</code>, <code>experience_current</code>, <code>experience_max</code>, <code>top_rank</code>, <code>modals[]</code></td></tr>
+<tr><td><code>shared/stores/user-store.js</code></td><td><code>credits</code>, <code>experience</code>, <code>level</code></td></tr>
+<tr><td><code>shared/chrome/SiteHeader.vue</code></td><td>полоса опыта (<code>site-header__stripe</code>), уровень, ссылка «Поднять бонусный опыт», пилюля «Бонусы +N»</td></tr>
+</tbody></table>
+<p>Данные окна приходят в <code>shell.modals[].data</code> от бэкенда; модалка не вправе ничего считать сама.</p>
+<h2>Что меняется по спеке (docs/livesurf-day-bonus.md)</h2>
+<ol>
+<li><b>Один тип вместо трёх.</b> Бэкенд отдаёт один элемент стека — <code>everyday-bonus</code>    (или новый <code>daily-hub</code>), в <code>data</code> которого есть и приветствие (<code>user_login</code>,    <code>first_visit</code>), и бонус (<code>breakdown</code>), и `level_up: {level, credits, skill,    pro_days, vip_days} | null<code>. Типы </code>everyday-welcome<code> и </code>level-up` в стек не    кладутся, когда есть <code>daily-hub</code>.</li>
+<li><b>Claim в окне.</b> Нужна ручка <code>POST /api/bonus/everyday/claim</code> с телом    <code>{ day_id, idempotency_key }</code> и ответом `{ credits, experience, level,    op_id, level_up }<code>. Кнопка «Забрать» перестаёт быть ссылкой на </code>/bonus`.    Машина состояний — <code>preview/ls-day-logic.js</code> (<code>claimReduce</code>).</li>
+<li><b>Данные для блоков по сценариям.</b> В <code>data</code> добавляются:    <code>projects_yesterday: [{id, name, visits, paused}]</code>, <code>paused_projects</code>,    <code>days_since_visit</code>, <code>experience_decay: {amount, date} | null</code>,    <code>program_today: {credits, skill, shows} | null</code>, <code>deeds: [...]</code>.    Правило выбора сценария — <code>pickScenario(facts)</code>; его можно считать на    бэкенде и передавать <code>scenario</code> в <code>data</code>.</li>
+<li><b>Полоса опыта</b> уже есть в шапке: после claim обновить <code>shell.experience_current</code>    и <code>user.level</code> из ответа, чтобы полоса сдвинулась без перезагрузки; точка    «бонус ждёт» гаснет по подтверждению (блок K8).</li>
+<li><b>Апселлы</b> остаются <code>kind: upsale</code> со своими правилами, но не показываются    следом за ежедневным окном в той же сессии (<code>maxPopupsPerSession: 1</code>).</li>
+</ol>
+<h2>Два визуальных языка, и это развилка</h2>
+<table><thead><tr><th></th><th>Канон главной (<code>projects/livesurf/popup-skin.css</code>)</th><th>Кабинет (слой <code>data-cabinet="true"</code>)</th></tr></thead><tbody>
+<tr><td>Шрифт</td><td>Gilroy заголовки, Montserrat текст</td><td>Montserrat через <code>--font-sans</code> (Inter в fallback)</td></tr>
+<tr><td>Кнопка</td><td>зелёная пилюля #03C860, hover чёрная</td><td>#00BE56 пилюля; вторичная синяя #006FFF радиус 12</td></tr>
+<tr><td>Карточки</td><td>20px, мятная #D1F0F4 / #F9FAFC / тёмная #0C363D</td><td>12–14px, #F5F7FB, бейдж #C8F0D9</td></tr>
+<tr><td>Радиус окна</td><td>30px</td><td>16px</td></tr>
+</tbody></table>
+<p>Обе версии на стенде: переключатель «Язык кабинета» в разделе 01 и в конструкторе. Решение за владельцем; по стандарту смешивать нельзя.</p>
+<h2>Как переносить</h2>
+<ul>
+<li>Разметка блока — <code>projects/livesurf/blocks/catalog.html</code> (<code>[data-id]</code>),   стили — <code>blocks.css</code> + <code>popup-skin.css</code> + <code>tokens.css</code>. В репозитории токены   объявляются на классе окна (как <code>.ls-landing</code> у лендингов), а не на <code>:root</code>,   чтобы не утечь в кабинет.</li>
+<li>Поведения — <code>preview/ls-blocks-live.js</code>: каждая функция — один блок, без   зависимостей; в Vue переносятся как методы компонента.</li>
+<li>Логика — <code>preview/ls-day-logic.js</code>: чистые функции, покрываются тестами по   образцу <code>shared/**/__tests__</code>.</li>
+<li>Тексты — через i18n (<code>shared/locales/ru.json</code>, ключи <code>modal.everydayBonus.*</code>   расширяются), захардкоженных строк не оставлять.</li>
+<li>Кегль не мельче 12px, кнопки от 44px, бирюза для текста на белом —   затемнённая #0E7C8E (планка <code>docs/livesurf/13-design-standard.md</code>).</li>
+</ul>
+</main></body></html>
