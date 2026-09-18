@@ -959,11 +959,11 @@
 .blk-gauge-seg[data-lit='true']::after { transform: scaleX(1); }
 .blk-gauge-seg:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: -3px; }
 .blk-gauge-marks { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--ls-ink-2); }
-.blk-gauge-marks span { white-space: nowrap; }
-.blk-gauge-marks span:nth-child(2) { text-align: center; }
-.blk-gauge-marks span:last-child { text-align: right; }
+.blk-gauge-marks > * { white-space: nowrap; }
+.blk-gauge-marks > :nth-child(2) { text-align: center; }
+.blk-gauge-marks > :last-child { text-align: right; }
 .blk-gauge-marks b { display: block; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); color: var(--ls-ink); font-variant-numeric: tabular-nums; }
-.blk-gauge-marks span:first-child b { color: #067A3D; }
+.blk-gauge-marks > :first-child b { color: #067A3D; }
 [data-bg='dark'] .blk-gauge-marks { color: var(--ls-on-dark-2); }
 [data-bg='dark'] .blk-gauge-marks b { color: var(--ls-on-dark); }
 [data-bg='dark'] .blk-gauge-marks span:first-child b { color: var(--ls-green); }
@@ -1036,6 +1036,98 @@
 @media (prefers-reduced-motion: reduce) {
   .blk-ladder--empty > div, .blk-bar--multi button, .blk-bar i { transition: none; }
 }
+
+/* N7: конструктор ступени — действия, шкала с отсечками, следствия в системе */
+.blk-scale-track { position: relative; height: 14px; border-radius: var(--ls-radius-pill); background: var(--ls-line); margin-bottom: 34px; }
+[data-bg='dark'] .blk-scale-track { background: var(--ls-glass-line); }
+[data-bg='mint'] .blk-scale-track { background: rgba(255,255,255,.7); }
+.blk-scale-track > i { display: block; height: 100%; border-radius: var(--ls-radius-pill); background: var(--ls-cyan); transition: width .6s cubic-bezier(.22,.61,.36,1); }
+.blk-mark { position: absolute; top: 0; left: var(--at); transform: translateX(-50%); text-align: center; white-space: nowrap; }
+.blk-mark > i { display: block; width: 2px; height: 14px; margin: 0 auto; background: var(--ls-line-strong); }
+.blk-mark b { display: block; margin-top: 4px; font-size: 10px; font-weight: var(--ls-w-semibold); color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+.blk-mark small { display: block; font-size: 10px; color: var(--ls-ink-2); }
+.blk-mark[data-passed='true'] > i { background: var(--ls-green); width: 3px; }
+.blk-mark[data-passed='true'] b, .blk-mark[data-passed='true'] small { color: #067A3D; font-weight: var(--ls-w-semibold); }
+.blk-mark[data-next='true'] > i { background: var(--ls-cyan-dark); width: 3px; }
+.blk-mark[data-next='true'] b { color: var(--ls-cyan-deep); }
+.blk-mark:first-child { transform: translateX(-30%); }
+.blk-mark:last-child { transform: translateX(-70%); }
+[data-bg='dark'] .blk-mark b, [data-bg='dark'] .blk-mark small { color: var(--ls-on-dark-2); }
+.blk-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.blk-act { text-align: left; border: 1px solid var(--ls-line); background: var(--ls-white); border-radius: var(--ls-radius-md); padding: 10px 12px; font-family: inherit; color: inherit; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.blk-act b { display: block; font-size: 13px; font-weight: var(--ls-w-semibold); }
+.blk-act span { display: block; margin-top: 2px; font-size: 11px; color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+.blk-act em { display: block; margin-top: 6px; font-style: normal; font-size: 11px; font-weight: var(--ls-w-semibold); color: var(--ls-cyan-text); }
+.blk-act[aria-pressed='true'] { border-color: var(--ls-green); background: rgba(3,200,96,.1); transform: translateY(-1px); }
+.blk-act[aria-pressed='true'] em { color: #067A3D; }
+.blk-act:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+[data-bg='dark'] .blk-act { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+[data-bg='dark'] .blk-act span { color: var(--ls-on-dark-2); }
+[data-bg='dark'] .blk-act em { color: var(--ls-cyan); }
+.blk-outcome { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.blk-outcome > div { padding: 10px 12px; border-radius: var(--ls-radius-sm); background: var(--ls-white); border: 1px solid var(--ls-line); }
+.blk-outcome span { display: block; font-size: 11px; color: var(--ls-ink-2); }
+.blk-outcome b { display: block; margin-top: 4px; font-family: var(--ls-font-display); font-size: 17px; font-weight: var(--ls-w-semibold); font-variant-numeric: tabular-nums; }
+.blk-outcome b[data-up='true'] { color: #067A3D; }
+[data-bg='dark'] .blk-outcome > div { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+[data-bg='dark'] .blk-outcome span { color: var(--ls-on-dark-2); }
+@media (max-width: 430px) {
+  .blk-acts { grid-template-columns: 1fr; }
+  .blk-outcome { grid-template-columns: 1fr; }
+  .blk-outcome > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .blk-outcome b { margin-top: 0; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .blk-scale-track > i, .blk-act { transition: none; } }
+
+/* N8: сегменты оборота внутри шкалы и пульт с шагами */
+.blk-segs { position: absolute; inset: 0; display: flex; border-radius: var(--ls-radius-pill); overflow: hidden; }
+.blk-segs > i { flex: 0 0 var(--w); transition: flex-basis .5s cubic-bezier(.22,.61,.36,1); }
+.blk-segs > i[data-part='credits'] { background: var(--ls-cyan); }
+.blk-segs > i[data-part='sub'] { background: var(--ls-green); }
+.blk-segs > i[data-part='ref'] { background: #F5A623; }
+.blk-ctl { display: flex; flex-direction: column; gap: 6px; }
+.blk-ctl-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: var(--ls-radius-sm); background: var(--ls-white); border: 1px solid var(--ls-line); }
+[data-bg='dark'] .blk-ctl-row { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-ctl-row b { display: block; font-size: 13px; font-weight: var(--ls-w-semibold); }
+.blk-ctl-row small { display: block; margin-top: 2px; font-size: 11px; color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+[data-bg='dark'] .blk-ctl-row small { color: var(--ls-on-dark-2); }
+.blk-pm { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.blk-pm button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--ls-line-strong); background: var(--ls-white); color: inherit; font: inherit; font-size: 16px; line-height: 1; cursor: pointer; transition: background .15s, border-color .15s; }
+.blk-pm button:hover { border-color: var(--ls-green); background: rgba(3,200,96,.12); }
+.blk-pm button:disabled { opacity: .4; cursor: default; }
+.blk-pm button:disabled:hover { background: var(--ls-white); border-color: var(--ls-line-strong); }
+.blk-pm button:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+.blk-pm span { min-width: 74px; text-align: center; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); font-variant-numeric: tabular-nums; }
+[data-bg='dark'] .blk-pm button { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-more--plain::after { content: none; }
+@media (prefers-reduced-motion: reduce) { .blk-segs > i { transition: none; } }
+
+/* Объяснения «что это такое» на кредитах и опыте (B9, B10) */
+.blk-tip-host { position: relative; }
+.blk-tip-host:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 4px; border-radius: 8px; }
+.blk-explain { cursor: help; border-bottom: 1px dotted var(--ls-ink-2); }
+[data-bg='dark'] .blk-explain { border-bottom-color: var(--ls-on-dark-2); }
+.blk-tip-host > .blk-bubble { top: calc(100% + 8px); }
+.blk-tip-host:hover > .blk-bubble, .blk-tip-host:focus-within > .blk-bubble { opacity: 1; visibility: visible; }
+/* сам пузырь — тоже span внутри .blk-wallet, поэтому правило подписи кошелька
+   перекрывало его цвет: задаём явно, иначе серый текст на тёмном фоне */
+.blk-wallet .blk-bubble { left: 0; transform: none; color: var(--ls-white); }
+[data-bg='dark'] .blk-wallet .blk-bubble { color: var(--ls-ink); }
+.blk-wallet .blk-bubble b, .blk-wallet .blk-bubble span { color: inherit; }
+.blk-wallet .blk-bubble span { margin-top: 0; font-size: 11px; opacity: .85; }
+.blk-wallet .blk-bubble b { font-size: 12px; opacity: 1; }
+.blk-wallet .blk-bubble::before { left: 22px; margin-left: 0; }
+
+/* Типы аккаунта под шкалой — ссылки (B10) */
+.blk-tierlink { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: inherit; }
+.blk-tierlink b { display: block; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); color: var(--ls-ink); font-variant-numeric: tabular-nums; }
+.blk-tierlink span { border-bottom: 1px solid transparent; transition: border-color .15s, color .15s; }
+.blk-tierlink:hover span, .blk-tierlink:focus-visible span { color: var(--ls-cyan-text); border-bottom-color: currentColor; }
+.blk-tierlink:hover b, .blk-tierlink:focus-visible b { color: var(--ls-cyan-dark); }
+.blk-tierlink:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 3px; border-radius: 6px; }
+.blk-gauge-marks .blk-tierlink:first-child b { color: #067A3D; }
+[data-bg='dark'] .blk-tierlink b { color: var(--ls-on-dark); }
+@media (prefers-reduced-motion: reduce) { .blk-tierlink span { transition: none; } }
 </style><style>
   :root { color-scheme: light; }
   [hidden] { display: none !important; }
@@ -1205,7 +1297,7 @@
 <section class="cat-item" data-id="B9" data-group="B. Награда дня"
          data-title="Бонус дня и статус в одной карточке" data-purpose="B1 и B7 одним объектом: сумма, кнопка и три статуса рядом. Наведите или нажмите на другой статус — сумма пересчитается и покажет, сколько давал бы тот же уровень при нём. Открытого текста минимум: формула спрятана за «Как считается»."
          data-need="ставки по тарифам, ручка claim с идемпотентным ключом, цена статуса, зависимость опыта от статуса" data-verdict="Кандидат вместо пары B1 + B7: одна карточка, продажа не выше награды, а внутри неё" data-bg="mint">
-<div class="blk-row blk-row--between"><div><p class="ls-caption" data-live-out="cap">Бонус за сегодняшний визит</p><div class="blk-wallet"><div><b data-plus="true" data-live-out="credits">+73</b><span>кредита</span></div><div><b data-plus="true">+1 296</b><span>опыта</span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
+<div class="blk-row blk-row--between"><div><p class="ls-caption" data-live-out="cap">Бонус за сегодняшний визит</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true" data-live-out="credits">+73</b><span class="blk-explain">кредита</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>тратятся, пока идёт трафик; когда кончатся, проект останавливается</span></span></div><div class="blk-tip-host" tabindex="0"><b data-plus="true">+1 296</b><span class="blk-explain">опыта</span><span class="blk-bubble" role="tooltip"><b>Опыт</b><span>копится за визиты и поднимает уровень аккаунта</span><span>уровень умножает ставку бонуса: ставка × уровень = кредиты за визит</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
 <div class="blk-tiers blk-mt" role="group" aria-label="Статус аккаунта: сколько даёт тот же уровень"><button type="button" class="blk-tier" data-live-act="tier" data-tier="Минимум" data-credits="73" data-formula="2,5 кр × 29 уровень" aria-pressed="true"><b>Минимум</b><span>ваш статус</span></button><button type="button" class="blk-tier" data-live-act="tier" data-tier="Стандарт" data-credits="290" data-formula="5 × 29 за визит + 5 × 29 за статус" aria-pressed="false"><b>Стандарт</b><span>290 кр</span></button><button type="button" class="blk-tier" data-live-act="tier" data-tier="Премиум" data-credits="580" data-formula="10 × 29 за визит + 10 × 29 за статус" aria-pressed="false"><b>Премиум</b><span>580 кр</span></button></div>
 <button type="button" class="blk-more" data-live-act="more" aria-expanded="false">Как считается</button>
 <p class="blk-t blk-t--muted blk-t--sm" data-live-out="more" hidden>2,5 кр × 29 уровень. У статуса есть цена — на странице тарифов.</p>
@@ -1213,8 +1305,8 @@
 <section class="cat-item" data-id="B10" data-group="B. Награда дня"
          data-title="Ставка дня одной шкалой" data-purpose="Та же суть, что в B9, переосмысленная: сумма бонуса и три статуса — один объект. Ваша часть шкалы закрашена и забирается кнопкой, остальное прозрачно, потому что не открыто. Наведение на прозрачную часть заливает её и показывает разницу; переключатель «день / 30 дней» умножает всё без единого лишнего слова."
          data-need="ставки по тарифам, ручка claim, цена статуса, зависимость опыта от статуса" data-verdict="Гипотеза против B9: разница статусов как часть одной шкалы понятнее трёх карточек — мерить" data-bg="light">
-<div class="blk-row blk-row--between"><div><p class="ls-caption" data-live-out="cap">Сегодня за визит</p><div class="blk-wallet"><div><b data-plus="true" data-live-out="credits">+73</b><span data-live-out="unit">кредита</span></div><div><b data-plus="true" data-live-out="xp">+1 296</b><span>опыта</span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
-<div class="blk-gauge blk-mt" data-period="day"><div class="blk-gauge-bar"><span class="blk-gauge-seg" data-seg="mine" style="--w:12.6%"></span><button type="button" class="blk-gauge-seg" data-seg="ghost" data-live-act="seg" data-tier="Стандарт" data-credits="290" style="--w:37.4%" aria-label="Стандарт: 290 кредитов в день"></button><button type="button" class="blk-gauge-seg" data-seg="ghost" data-live-act="seg" data-tier="Премиум" data-credits="580" style="--w:50%" aria-label="Премиум: 580 кредитов в день"></button></div><div class="blk-gauge-marks"><span><b data-live-out="m1">73</b>ваш Минимум</span><span><b data-live-out="m2">290</b>Стандарт</span><span><b data-live-out="m3">580</b>Премиум</span></div><div class="blk-gauge-tip" data-live-out="tip" hidden></div></div>
+<div class="blk-row blk-row--between"><div><p class="ls-caption" data-live-out="cap">Ежедневный бонус</p><div class="blk-wallet"><div class="blk-tip-host" tabindex="0"><b data-plus="true" data-live-out="credits">+73</b><span class="blk-explain" data-live-out="unit">кредита</span><span class="blk-bubble" role="tooltip"><b>Кредиты</b><span>валюта визитов: один кредит — один визит на ваш проект</span><span>тратятся, пока идёт трафик; когда кончатся, проект останавливается</span></span></div><div class="blk-tip-host" tabindex="0"><b data-plus="true" data-live-out="xp">+1 296</b><span class="blk-explain">опыта</span><span class="blk-bubble" role="tooltip"><b>Опыт</b><span>копится за визиты и поднимает уровень аккаунта</span><span>уровень умножает ставку бонуса: ставка × уровень = кредиты за визит</span></span></div></div></div><button class="ls-btn" type="button" data-live-act="claim">Забрать</button></div>
+<div class="blk-gauge blk-mt" data-period="day"><div class="blk-gauge-bar"><span class="blk-gauge-seg" data-seg="mine" style="--w:12.6%"></span><button type="button" class="blk-gauge-seg" data-seg="ghost" data-live-act="seg" data-tier="Стандарт" data-credits="290" style="--w:37.4%" aria-label="Стандарт: 290 кредитов в день"></button><button type="button" class="blk-gauge-seg" data-seg="ghost" data-live-act="seg" data-tier="Премиум" data-credits="580" style="--w:50%" aria-label="Премиум: 580 кредитов в день"></button></div><div class="blk-gauge-marks"><button type="button" class="blk-tierlink" data-live-act="mark" data-tier="Минимум"><b data-live-out="m1">73</b><span>ваш Минимум</span></button><button type="button" class="blk-tierlink" data-live-act="mark" data-tier="Стандарт"><b data-live-out="m2">290</b><span>Стандарт</span></button><button type="button" class="blk-tierlink" data-live-act="mark" data-tier="Премиум"><b data-live-out="m3">580</b><span>Премиум</span></button></div><div class="blk-gauge-tip" data-live-out="tip" hidden></div></div>
 <div class="blk-row blk-row--between blk-mt-sm"><div class="blk-tabs" role="tablist" aria-label="Период"><button type="button" class="blk-tab" role="tab" data-live-act="period" data-period="day" aria-selected="true">День</button><button type="button" class="blk-tab" role="tab" data-live-act="period" data-period="month" aria-selected="false">30 дней</button></div><button type="button" class="blk-more" data-live-act="more" aria-expanded="false">Как считается</button></div>
 <p class="blk-t blk-t--muted blk-t--sm" data-live-out="more" hidden>Ставка × 29 уровень: 2,5 / 5 / 10 кр за визит; на Стандарте и Премиуме столько же ещё раз за статус. Цена статуса — на странице тарифов.</p>
 </section>
@@ -1815,22 +1907,26 @@
 <p class="blk-t blk-t--muted blk-t--sm blk-mt-sm">Одна цена на экран, одна единица измерения, никаких «от» без второй границы.</p>
 </section>
 <section class="cat-item" data-id="N7" data-group="N. Цена, срочность и доверие"
-         data-title="Ступень цены до первой покупки" data-purpose="Та же лестница пакетов, что в N3, но для того, кто ещё ничего не купил: плитки пустые, шкала на нуле, и это сказано прямо. Вместо рекламы — счётчик: выберите, сколько визитов нужно в месяц, и каждая ступень покажет свою цену в рублях именно для этого объёма. Наведение или фокус на ступени показывает, что она даёт и сколько стоит вход в неё."
-         data-need="прайс-сетка, факт отсутствия покупок, средний расход визитов" data-verdict="Основа для нового аккаунта: N3 в пустом состоянии показывает чужую жизнь" data-bg="light">
-<div class="blk-row blk-row--between"><div class="blk-h blk-h--sm" style="margin:0">Цена тысячи визитов</div><span class="ls-chip">покупок пока нет</span></div>
-<p class="ls-caption blk-mt-sm">Сколько визитов нужно в месяц</p>
-<div class="blk-tabs" role="tablist" aria-label="Объём визитов в месяц"><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="10000" aria-selected="true">10 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="50000" aria-selected="false">50 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="200000" aria-selected="false">200 тыс.</button></div>
-<div class="blk-ladder blk-ladder--empty blk-mt" data-live-host="price"><div data-live-act="step" data-pack="50000" data-price="50" data-title="Пакет 50 000"><b>50 000</b><span>50 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 50 000 кредитов</b><span data-live-out="b1">вход 2 500 ₽</span><span>первая ступень: цена падает с прайсовой сразу после покупки</span></span></div><div data-live-act="step" data-pack="300000" data-price="15" data-title="Пакет 300 000"><b>300 000</b><span>15 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 300 000 кредитов</b><span data-live-out="b2">вход 4 500 ₽</span><span>в три раза дешевле за тысячу визитов, чем первая ступень</span></span></div><div data-live-act="step" data-pack="1000000" data-price="5.9" data-title="Пакет 1 000 000"><b>1 000 000</b><span>5,9 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 1 000 000 кредитов</b><span data-live-out="b3">вход 5 900 ₽</span><span>рабочая ступень для постоянного трафика</span></span></div><div data-live-act="step" data-pack="10000000" data-price="0.8" data-title="Пакет 10 000 000"><b>10 000 000</b><span>0,8 ₽ / 1 000</span><span class="blk-bubble" role="tooltip"><b>Пакет 10 000 000 кредитов</b><span data-live-out="b4">вход 8 000 ₽</span><span>нижняя цена прайса</span></span></div></div>
-<div class="blk-bar blk-mt" aria-hidden="true"><i style="width:0%"></i></div>
-<p class="blk-bar-note" data-live-out="price">Шкала пустая: покупок ещё не было. При 10 тыс. визитов в месяц первая ступень стоит <b class="blk-accent">500 ₽</b>, а ступень 1 000 000 — <b class="blk-accent">59 ₽</b> за тот же объём.</p>
+         data-title="Что сделать, чтобы визиты стали дешевле" data-purpose="Не прайс-таблица, а конструктор: четыре действия, каждое со своей ценой в рублях, складываются в оборот квартала и двигают шкалу к отсечкам цены. Видно, сколько не хватает до ближайшей и чем именно её закрыть. Внизу — что меняется в самой системе: цена тысячи визитов, бонус дня по типу аккаунта и на сколько дней хватит трафика."
+         data-need="прайс-сетка, оборот квартала, опубликованное правило накопления, ставка по тарифу, расход визитов" data-verdict="Кандидат вместо статичной лестницы: показывает причину и следствие, а не список цен" data-bg="light">
+<div class="blk-row blk-row--between"><div class="blk-h blk-h--sm" style="margin:0">Что сделать, чтобы визиты стали дешевле</div><span class="ls-chip" data-tone="warn">правило накопления публикуется заранее</span></div>
+<div class="blk-scale blk-mt" data-live-host="plan"><div class="blk-scale-track"><i data-live-out="fill" style="width:0%"></i><span class="blk-mark" data-live-out="mark50" style="--at:5%"><i></i><b>50 000</b><small>50 ₽</small></span><span class="blk-mark" data-live-out="mark300" style="--at:30%"><i></i><b>300 000</b><small>15 ₽</small></span><span class="blk-mark" data-live-out="mark1m" style="--at:100%"><i></i><b>1 000 000</b><small>5,9 ₽</small></span></div></div>
+<p class="blk-t blk-t--sm blk-mt-sm" data-live-out="gap"><b class="blk-accent" data-warn="true">Покупок пока нет.</b> До первой отсечки 50 000 — весь путь: любой пакет открывает цену 50 ₽ за тысячу. Нажимайте действия ниже: шкала считает их вместе.</p>
+<div class="blk-acts blk-mt"><button type="button" class="blk-act" data-live-act="pick" data-key="pack300" data-sum="300000" data-cost="4500" data-effect="ступень цены" aria-pressed="false"><b>Пакет 300 000</b><span>4 500 ₽</span><em>+300 000 к обороту</em></button><button type="button" class="blk-act" data-live-act="pick" data-key="pack1m" data-sum="1000000" data-cost="5900" data-effect="ступень цены" aria-pressed="false"><b>Пакет 1 000 000</b><span>5 900 ₽</span><em>+1 000 000 к обороту</em></button><button type="button" class="blk-act" data-live-act="pick" data-key="sub" data-sum="90000" data-cost="2997" data-effect="тип аккаунта" aria-pressed="false"><b>Подписка «Стандарт»</b><span>2 997 ₽ за квартал</span><em>+90 000 и бонус дня ×4</em></button><button type="button" class="blk-act" data-live-act="pick" data-key="ref" data-sum="70000" data-cost="0" data-effect="оборот" aria-pressed="false"><b>Пригласить коллегу</b><span>0 ₽</span><em>+70 000 после холда</em></button></div>
+<div class="blk-outcome blk-mt"><div><span>Цена тысячи визитов</span><b data-live-out="price">нет</b></div><div><span>Бонус дня на 29 уровне</span><b data-live-out="bonus">+73</b></div><div><span>Хватит трафика на</span><b data-live-out="days">0 дней</b></div></div>
+<div class="blk-row blk-row--between blk-mt-sm"><div class="blk-tabs" role="tablist" aria-label="Сколько визитов нужно в месяц"><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="10000" aria-selected="true">10 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="50000" aria-selected="false">50 тыс.</button><button type="button" class="blk-tab" role="tab" data-live-act="need" data-need="200000" aria-selected="false">200 тыс.</button></div><button type="button" class="blk-more blk-more--plain" data-live-act="reset">Сбросить</button></div>
+<p class="blk-t blk-t--muted blk-t--sm blk-mt-sm" data-live-out="money">На 10 000 визитах в месяц выбранное пока ничего не меняет: цена не открыта.</p>
 </section>
 <section class="cat-item" data-id="N8" data-group="N. Цена, срочность и доверие"
-         data-title="Шкала ступени из трёх вкладов" data-purpose="Комбинированная версия N3: до следующей ступени цены шкалу двигает не только покупка кредитов, а весь оборот квартала — кредиты, подписка и покупки приглашённых по вашей ссылке. Каждый вклад — свой сегмент шкалы со своим цветом; наведение показывает, сколько дал именно он и что сделать, чтобы дал больше."
-         data-need="прайс-сетка, оборот квартала по трём источникам, опубликованное правило зачёта, холд на реферальный оборот" data-verdict="Гипотеза под цель «средний чек»: правило зачёта надо публиковать и защищать холдом" data-bg="light">
-<div class="blk-ladder blk-mt"><div data-done="true"><b>50 000</b><span>50 ₽ / 1 000</span></div><div data-now="true"><b>300 000</b><span>15 ₽ / 1 000</span></div><div><b>1 000 000</b><span>5,9 ₽ / 1 000</span></div><div><b>10 000 000</b><span>0,8 ₽ / 1 000</span></div></div>
-<div class="blk-bar blk-bar--multi blk-mt" data-live-host="mix"><button type="button" data-live-act="part" data-part="credits" data-sum="340000" data-money="5100" data-how="Докупить кредиты пакетом — самый быстрый путь: 660 000 закрывают ступень сразу" style="--w:34%" aria-label="Купленные кредиты: 340 000"></button><button type="button" data-live-act="part" data-part="sub" data-sum="90000" data-money="2997" data-how="Подписка идёт в оборот автоматически, пока активна" style="--w:9%" aria-label="Подписка за квартал: 90 000"></button><button type="button" data-live-act="part" data-part="ref" data-sum="70000" data-money="1050" data-how="Покупки приглашённых засчитываются после холда 30 дней" style="--w:7%" aria-label="Приглашённые: 70 000"></button></div>
-<div class="blk-legend"><span data-part="credits">кредиты 340 000</span><span data-part="sub">подписка 90 000</span><span data-part="ref">приглашённые 70 000</span></div>
-<p class="blk-bar-note" data-live-out="mix">Оборот квартала <b class="blk-accent">500 000</b> из 1 000 000. Ещё <b class="blk-accent">500 000</b> — и тысяча визитов стоит 5,9 ₽ вместо 15 ₽. Наведите на сегмент: покажет, сколько дал он и что сделать дальше.</p>
+         data-title="Оборот квартала: чем добрать до цены" data-purpose="Не картинка с тремя цветами, а пульт: у каждого источника оборота свой шаг и своя цена, плюс и минус двигают шкалу на глазах. На шкале стоят отсечки цены, под ней всегда написано, сколько осталось и чем это дешевле закрыть — пакетами за деньги или приглашениями за время. Внизу следствия: цена тысячи визитов, потраченное за квартал и остаток до следующей отсечки."
+         data-need="прайс-сетка, оборот по источникам, опубликованное правило зачёта, холд на реферальный оборот" data-verdict="Гипотеза под средний чек: даёт управление, а не только картинку" data-bg="light">
+<div class="blk-row blk-row--between"><div class="blk-h blk-h--sm" style="margin:0">Оборот квартала</div><span class="ls-chip" data-tone="warn">правило зачёта публикуется заранее</span></div>
+<div class="blk-scale blk-mt" data-live-host="mix"><div class="blk-scale-track"><span class="blk-segs"><i data-part="credits" data-live-out="s-credits" style="--w:30%"></i><i data-part="sub" data-live-out="s-sub" style="--w:9%"></i><i data-part="ref" data-live-out="s-ref" style="--w:7%"></i></span><span class="blk-mark" data-live-out="m300" style="--at:30%"><i></i><b>300 000</b><small>15 ₽</small></span><span class="blk-mark" data-live-out="m1m" style="--at:100%"><i></i><b>1 000 000</b><small>5,9 ₽</small></span></div></div>
+<div class="blk-legend"><span data-part="credits">кредиты</span><span data-part="sub">подписка</span><span data-part="ref">приглашённые</span></div>
+<p class="blk-t blk-t--sm blk-mt-sm" data-live-out="gap"></p>
+<div class="blk-ctl blk-mt"><div class="blk-ctl-row" data-part="credits" data-step="300000" data-cost="4500" data-base="300000"><div><b>Пакеты кредитов</b><small>шаг 300 000 · 4 500 ₽</small></div><div class="blk-pm"><button type="button" data-live-act="minus" aria-label="Убрать пакет">−</button><span data-live-out="v-credits">300000</span><button type="button" data-live-act="plus" aria-label="Добавить пакет">+</button></div></div><div class="blk-ctl-row" data-part="sub" data-step="90000" data-cost="2997" data-base="90000"><div><b>Подписка «Стандарт»</b><small>квартал 90 000 · 2 997 ₽</small></div><div class="blk-pm"><button type="button" data-live-act="minus" aria-label="Убрать квартал подписки">−</button><span data-live-out="v-sub">90000</span><button type="button" data-live-act="plus" aria-label="Добавить квартал подписки">+</button></div></div><div class="blk-ctl-row" data-part="ref" data-step="70000" data-cost="0" data-base="70000"><div><b>Приглашённые коллеги</b><small>по 70 000 после холда · 0 ₽</small></div><div class="blk-pm"><button type="button" data-live-act="minus" aria-label="Убрать приглашённого">−</button><span data-live-out="v-ref">70000</span><button type="button" data-live-act="plus" aria-label="Добавить приглашённого">+</button></div></div></div>
+<div class="blk-outcome blk-mt"><div><span>Цена тысячи визитов</span><b data-live-out="price">15 ₽</b></div><div><span>Потрачено за квартал</span><b data-live-out="spent">7 497 ₽</b></div><div><span>До цены 5,9 ₽</span><b data-live-out="left">540 000</b></div></div>
+<p class="blk-t blk-t--muted blk-t--sm blk-mt-sm">Кредитов за оборот не начисляем: двигается только цена по прайсу. Оборот приглашённых засчитывается после холда — иначе мультиаккаунт превращает шкалу в скидку себе.</p>
 </section>
 <section class="cat-item" data-id="N9" data-group="N. Цена, срочность и доверие"
          data-title="Ступень цены в днях и рублях" data-purpose="Третья подача той же лестницы: вместо «осталось 660 000» — сколько это дней на вашем темпе и что даст переход в рублях. Переключатель «добрать сейчас / идти как идёте» пересчитывает обе цифры: срок перехода и экономию за следующий квартал. Срочности нет — есть арифметика."
@@ -2390,7 +2486,7 @@ const evidence = {
   M5: { level: "📏", src: "ECON-07: 84–92 % отмен до первого списания, лестница скидок начинается с пятого", not: "—" },
   N1: { level: "📏", src: "ФЗ «О рекламе» ст. 5, КоАП 14.3: 100–500 тыс. ₽ за факт; практика УФАС 09.2025", not: "Прирост конверсии от таймеров нигде не измерен — убирать нечего." },
   N2: { level: "📏", src: "ЕС Omnibus: старая цена = минимальная за 30 дней; ФАС: «Лента» 40 % → 5 %", not: "—" },
-  N7: { level: "📏", src: "Прайс-сетка продукта: 50 / 15 / 5,9 / 0,8 ₽ за 1 000; ECON-16 — пустая шкала у неплатившего показывает чужой прогресс", not: "Никаких «скидок»: показываем цену прайса на объём, который человек назвал сам. Вход в ступень — это покупка пакета, а не награда." },
+  N7: { level: "📏", src: "Прайс-сетка продукта: 50 / 15 / 5,9 / 0,8 ₽ за 1 000; ECON-16; Kivetz et al. 2006 — видимая близкая цель ускоряет, когда виден и шаг к ней", not: "Никаких «скидок»: показываем цену прайса. Правило накопления оборота в продукте не существует — публиковать до запуска. Ставки бонуса 2,5 / 5 / 10 по тарифам — факт аудита, зависимость опыта от статуса не проверена." },
   N8: { level: "🗣", src: "Комбинированная шкала предложена владельцем 18.09.2026; правило зачёта оборота в продукте не существует", not: "Не показывать, пока правило зачёта не опубликовано: это условия акции. Реферальный оборот засчитывать только после холда, иначе мультиаккаунт превращает шкалу в скидку себе (MKT-07)." },
   N9: { level: "📏", src: "Kivetz et al. 2006: близкая цель ускоряет; ECON-16 — выгода считается на реальном расходе", not: "Срок окупаемости считается на текущем расходе и называется вслух. Таймеров и «осталось N часов» здесь быть не может (UX-03)." },
   N3: { level: "📏", src: "Kivetz et al. 2006 (goal gradient); ECON-16: 2 249 ₽ создают 7,5 ₽ за 1 000 между ступенями", not: "Эффект геймификации на средний чек в литературе не измерен вовсе." },
@@ -2600,8 +2696,8 @@ const practice = {
   M2: "Смена плана в момент отмены (Churnkey, 3 млн сессий).",
   M3: "Dunning: восстановление непроизвольного оттока (Recurly).",
   N3: "Градиент цели на реальной цене вместо скидки ниже сетки.",
-  N7: "Пустое состояние вместо чужого прогресса: человек называет свой объём и видит свою цену.",
-  N8: "Одна цель из нескольких вкладов: видно, что именно её двигает и что сделать дальше.",
+  N7: "Причина и следствие вместо прайс-таблицы: действие двигает шкалу к отсечке цены.",
+  N8: "Пульт вместо картинки: у каждого источника оборота свой шаг, цена и видимый вклад.",
   N9: "Цель в днях и рублях: срок перехода и срок окупаемости названы вслух.",
   B9: "Одна карточка вместо двух: сумма, действие и правда о статусе рядом; апселл не выше награды и один на окно.",
   B10: "Часть и целое: своя доля закрашена, остальное прозрачно — та же правда о статусе без карточек и без текста.",
@@ -2725,8 +2821,8 @@ const notes = {
   N1: "Один источник времени на оффер; дата вместо секундомера.",
   N2: "База скидки — минимальная цена за 30 дней.",
   N3: "Прогресс к следующей ступени сетки вместо −50 % на повтор.",
-  N7: "Для аккаунта без покупок N3 показывает чужую жизнь: заполненные плитки и полосу, которой у человека нет. N7 говорит «покупок пока нет» прямо, а вместо рекламы даёт счёт: человек выбирает нужный объём визитов, и каждая ступень показывает свою цену в рублях именно для него. Наведение и фокус раскрывают, что даёт ступень и сколько стоит вход. Никаких скидок: это цены прайса.",
-  N8: "Ответ на вопрос «чем наполнять шкалу, кроме покупки». Шкалу двигает оборот квартала из трёх источников: кредиты, подписка и покупки приглашённых. Каждый вклад — свой сегмент; наведение показывает его долю, рубли и следующий шаг. Условие запуска: правило зачёта публикуется заранее как условия акции, реферальный оборот засчитывается после холда — иначе мультиаккаунт превращает шкалу в скидку себе (MKT-07). Кредиты за оборот не начисляются: двигается только цена по прайсу.",
+  N7: "Переосмыслен 18.09.2026: прайс-лестница не объясняла, что делать и как это на что-то влияет. Теперь это конструктор. Четыре действия с настоящими ценами — пакет 300 000 за 4 500 ₽, пакет 1 000 000 за 5 900 ₽, подписка за 2 997 ₽ и приглашение за ноль — складываются в оборот квартала и двигают шкалу. На шкале стоят отсечки 50 000, 300 000 и 1 000 000 с ценой тысячи визитов; пройденные загораются зелёным, ближайшая подсвечивается. Под шкалой всегда написано, сколько не хватает и чем это закрыть дешевле всего — перебором по цене, а не наугад. Внизу три объекта системы, которые меняются на глазах: цена тысячи визитов, бонус дня по типу аккаунта и на сколько дней хватит купленного трафика. Правило накопления оборота публикуется заранее, иначе это условия акции без существенной информации.",
+  N8: "Переосмыслен 18.09.2026: показывать три цветных сегмента мало, человеку нужна ручка управления. Теперь у каждого источника оборота свой шаг и своя цена — пакет 300 000 за 4 500 ₽, квартал подписки 90 000 за 2 997 ₽, приглашённый 70 000 за ноль, — а плюс и минус двигают сегмент на глазах. На шкале отсечки 300 000 и 1 000 000; под ней всегда сказано, сколько не хватает и во что это обходится: столько-то пакетов за деньги или столько-то приглашений за время и холд. Внизу цена тысячи визитов, потраченное за квартал и остаток до следующей отсечки. Условие запуска прежнее: правило зачёта публикуется заранее, реферальный оборот засчитывается после холда (MKT-07), кредиты за оборот не начисляются.",
   N9: "Та же лестница, но в понятных величинах: сколько дней до ступени на текущем расходе и сколько рублей она вернёт за квартал. Кнопка «Добрать сейчас» показывает цену добора по прайсу, новую цену тысячи визитов и срок окупаемости. Срочности нет: ни таймера, ни «последний день» — только арифметика, которую можно проверить.",
   N4: "Числа из аккаунта и очереди, не из рекламы. Редкий честный элемент — сохранить.",
   N5: "Своё число убеждает сильнее сравнения тарифов.",
@@ -3514,7 +3610,7 @@ const live = {
       if (!seg) {
         tip.hidden = true; tween(num, shown, m(MINE)); shown = m(MINE);
         num.removeAttribute('data-hypo');
-        cap.textContent = claimed ? 'Начислено сегодня' : (mult === 1 ? 'Сегодня за визит' : 'За 30 дней визитов');
+        cap.textContent = claimed ? 'Начислено сегодня' : (mult === 1 ? 'Ежедневный бонус' : 'Ежедневный бонус за 30 дней');
         return;
       }
       for (const x of segs) { x.dataset.lit = 'true'; if (x === seg) break; }
@@ -3525,13 +3621,26 @@ const live = {
       tip.hidden = false;
       tip.textContent = `${seg.dataset.tier}: +${fmtN(v)} кр ${period()} — на ${fmtN(v - m(MINE))} больше ваших. Цена статуса — на странице тарифов.`;
     };
+    const pick = (seg) => {
+      sticky = sticky === seg ? null : seg; lit(sticky);
+      ctx.announce(sticky ? tip.textContent + ' Кнопка забирает только закрашенную часть.' : `Ваша часть шкалы: +${fmtN(m(MINE))} кр ${period()}.`);
+    };
     segs.forEach((seg) => {
-      seg.onmouseenter = () => lit(seg); seg.onmouseleave = () => lit(sticky);
+      seg.onmouseenter = () => lit(seg);
       seg.onfocus = () => lit(seg); seg.onblur = () => lit(sticky);
-      seg.onclick = () => {
-        sticky = sticky === seg ? null : seg; lit(sticky);
-        ctx.announce(sticky ? tip.textContent + ' Кнопка забирает только закрашенную часть.' : `Ваша часть шкалы: +${fmtN(m(MINE))} кр ${period()}.`);
-      };
+      seg.onclick = () => pick(seg);
+    });
+    /* уход с полосы ловим один раз на всей полосе: на стыках сегментов
+       пара mouseleave + mouseenter давала мигание подсветки */
+    const bar = q(stage, '.blk-gauge-bar');
+    if (bar) bar.onmouseleave = () => lit(sticky);
+    /* названия статусов под шкалой — тоже управление, не подпись */
+    acts(stage, 'mark').forEach((btn, k) => {
+      const seg = k === 0 ? null : segs[k - 1];
+      btn.onmouseenter = () => lit(seg);
+      btn.onmouseleave = () => lit(sticky);
+      btn.onfocus = () => lit(seg); btn.onblur = () => lit(sticky);
+      btn.onclick = () => (seg ? pick(seg) : pick(sticky));
     });
     const setPeriod = (p, quiet) => {
       periods.forEach((x) => x.setAttribute('aria-selected', String(x === p)));
@@ -4087,58 +4196,148 @@ const live = {
     return true;
   },
   N7(stage, ctx) {
-    const steps = acts(stage, 'step'), needs = acts(stage, 'need'), res = out(stage, 'price');
-    if (!steps.length) return false;
-    let need = 10000;
-    const cost = (price) => Math.round((need / 1000) * price);
-    const paint = () => {
-      steps.forEach((st, i) => {
-        const c = cost(+st.dataset.price);
-        out(stage, 'b' + (i + 1)).textContent = `ваш объём: ${fmtN(c)} ₽ в месяц`;
-      });
-      const first = cost(+steps[0].dataset.price), best = cost(+steps[2].dataset.price);
-      res.innerHTML = `Шкала пустая: покупок ещё не было. При ${fmtN(need)} визитах в месяц первая ступень стоит <b class="blk-accent">${fmtN(first)} ₽</b>, а ступень 1 000 000 — <b class="blk-accent">${fmtN(best)} ₽</b> за тот же объём. Разница <b class="blk-accent">${fmtN(first - best)} ₽</b> в месяц.`;
+    const picks = acts(stage, 'pick'), needs = acts(stage, 'need'), reset = q(stage, '[data-live-act="reset"]');
+    const fill = out(stage, 'fill'), gap = out(stage, 'gap'), money = out(stage, 'money');
+    const price = out(stage, 'price'), bonus = out(stage, 'bonus'), days = out(stage, 'days');
+    if (!picks.length) return false;
+    const TIERS = [
+      { at: 50000, rub: 50, mark: out(stage, 'mark50') },
+      { at: 300000, rub: 15, mark: out(stage, 'mark300') },
+      { at: 1000000, rub: 5.9, mark: out(stage, 'mark1m') },
+    ];
+    const CREDITS = { pack300: 300000, pack1m: 1000000, sub: 90000, ref: 0 };
+    const chosen = new Set();
+    let need = 10000, prevBonus = 73, prevDays = 0;
+    const sum = (f) => picks.filter((p) => chosen.has(p.dataset.key)).reduce((a, p) => a + f(p), 0);
+    const dword = (n) => { const t = n % 100, o = n % 10; return t > 10 && t < 20 ? 'дней' : o === 1 ? 'день' : o > 1 && o < 5 ? 'дня' : 'дней'; };
+    const rub = (v) => (v % 1 ? v.toFixed(1).replace('.', ',') : fmtN(v));
+    /* Чем дешевле всего закрыть остаток: перебор невыбранных действий */
+    const cheapest = (want) => {
+      const rest = picks.filter((p) => !chosen.has(p.dataset.key));
+      let best = null;
+      for (let m = 1; m < (1 << rest.length); m += 1) {
+        const set = rest.filter((_, k) => m & (1 << k));
+        const add = set.reduce((a, p) => a + +p.dataset.sum, 0);
+        if (add < want) continue;
+        const cost = set.reduce((a, p) => a + +p.dataset.cost, 0);
+        if (!best || cost < best.cost || (cost === best.cost && set.length < best.set.length)) best = { set, cost };
+      }
+      return best;
     };
-    steps.forEach((st) => {
-      st.tabIndex = 0; st.setAttribute('role', 'button');
-      const lit = (on) => { steps.forEach((x) => x.removeAttribute('data-lit')); if (on) st.dataset.lit = 'true'; };
-      st.onmouseenter = () => lit(true); st.onmouseleave = () => lit(false);
-      st.onfocus = () => lit(true); st.onblur = () => lit(false);
-      const tell = () => {
-        lit(true);
-        ctx.announce(`${st.dataset.title}: ${fmtN(cost(+st.dataset.price))} ₽ за ${fmtN(need)} визитов в месяц. Цена ступени опубликована в прайсе, это не скидка.`);
+    const paint = (spoken) => {
+      const turnover = sum((p) => +p.dataset.sum);
+      const spent = sum((p) => +p.dataset.cost);
+      const credits = sum((p) => CREDITS[p.dataset.key] || 0);
+      const tier = [...TIERS].reverse().find((t) => turnover >= t.at) || null;
+      const next = TIERS.find((t) => turnover < t.at) || null;
+      fill.style.width = Math.min(100, (turnover / 1000000) * 100) + '%';
+      TIERS.forEach((t) => {
+        t.mark.dataset.passed = String(turnover >= t.at);
+        t.mark.dataset.next = String(next === t);
+      });
+      price.textContent = tier ? `${rub(tier.rub)} ₽` : 'нет';
+      price.dataset.up = String(!!tier);
+      const nb = chosen.has('sub') ? 290 : 73;
+      tween(bonus, prevBonus, nb); prevBonus = nb;
+      bonus.dataset.up = String(nb > 73);
+      const nd = Math.round(credits / 8000);
+      if (nd !== prevDays) { days.textContent = `${fmtN(nd)} ${dword(nd)}`; prevDays = nd; }
+      days.dataset.up = String(nd > 0);
+      /* сколько осталось и чем это закрыть */
+      if (!next) {
+        gap.innerHTML = `<b class="blk-accent">Оборот ${fmtN(turnover)}: цена 5,9 ₽ за тысячу открыта.</b> Дальше по прайсу только пакет 10 000 000 по 0,8 ₽ — это отдельное решение, а не следующая ступень этой шкалы.`;
+      } else {
+        const want = next.at - turnover;
+        const best = cheapest(want);
+        const how = best
+          ? `Дешевле всего закрыть так: ${best.set.map((p) => q(p, 'b').textContent.toLowerCase()).join(' + ')} — ${fmtN(best.cost)} ₽.`
+          : 'Одними показанными действиями этот остаток не закрыть: нужен пакет крупнее.';
+        gap.innerHTML = turnover === 0
+          ? `<b class="blk-accent" data-warn="true">Покупок пока нет.</b> До первой отсечки ${fmtN(next.at)} — весь путь. ${how}`
+          : `Набрано <b class="blk-accent">${fmtN(turnover)}</b>. До цены ${rub(next.rub)} ₽ за тысячу не хватает <b class="blk-accent">${fmtN(want)}</b>. ${how}`;
+      }
+      /* что это значит деньгами на выбранном объёме */
+      const base = Math.round((need / 1000) * 50);
+      if (!tier) {
+        money.innerHTML = `На ${fmtN(need)} визитах в месяц цена пока не открыта: до первой покупки платить не за что, но и скидки нет.`;
+      } else {
+        const now = Math.round((need / 1000) * tier.rub);
+        money.innerHTML = tier.rub === 50
+          ? `На ${fmtN(need)} визитах в месяц это <b class="blk-accent">${fmtN(now)} ₽</b> — цена первой ступени. Следующая отсечка снижает её втрое.`
+          : `На ${fmtN(need)} визитах в месяц это <b class="blk-accent">${fmtN(now)} ₽</b> вместо ${fmtN(base)} ₽ по первой ступени: <b class="blk-accent">${fmtN(base - now)} ₽</b> в месяц разницы. Потрачено на действия ${fmtN(spent)} ₽.`;
+      }
+      if (spoken) ctx.announce(spoken);
+    };
+    picks.forEach((p) => {
+      p.onclick = () => {
+        const k = p.dataset.key, on = !chosen.has(k);
+        if (on) chosen.add(k); else chosen.delete(k);
+        p.setAttribute('aria-pressed', String(on));
+        paint(`${on ? 'Добавлено' : 'Убрано'}: ${q(p, 'b').textContent}, ${fmtN(+p.dataset.sum)} к обороту. ${gap.textContent}`);
       };
-      st.onclick = tell; key(st, tell);
     });
     needs.forEach((b) => {
       b.onclick = () => {
         needs.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-        need = +b.dataset.need; paint();
-        ctx.announce(`Пересчитано на ${fmtN(need)} визитов в месяц. Пустая шкала честнее чужого прогресса: человек видит свою цену, а не чей-то путь.`);
+        need = +b.dataset.need;
+        paint(`Пересчитано на ${fmtN(need)} визитов в месяц.`);
       };
     });
+    reset.onclick = () => {
+      chosen.clear();
+      picks.forEach((p) => p.setAttribute('aria-pressed', 'false'));
+      paint('Сброшено: шкала снова пустая, как у аккаунта без покупок.');
+    };
     paint();
     return true;
   },
   N8(stage, ctx) {
-    const parts = acts(stage, 'part'), res = out(stage, 'mix');
-    if (!parts.length) return false;
-    const TARGET = 1000000;
-    const total = parts.reduce((s2, p) => s2 + +p.dataset.sum, 0);
-    const names = { credits: 'Купленные кредиты', sub: 'Подписка', ref: 'Приглашённые' };
-    const normal = res.innerHTML;
-    let sticky = null;
-    const show = (p) => {
-      parts.forEach((x) => { if (p && x !== p) x.dataset.dim = 'true'; else x.removeAttribute('data-dim'); });
-      if (!p) { res.innerHTML = normal; return; }
-      const sum = +p.dataset.sum, share = Math.round((sum / total) * 100);
-      res.innerHTML = `<b class="blk-accent">${names[p.dataset.part]}: ${fmtN(sum)}</b> из ${fmtN(total)} оборота — это ${share} % шкалы и ${fmtN(+p.dataset.money)} ₽. ${p.dataset.how}.`;
+    const rows = qa(stage, '.blk-ctl-row'), gap = out(stage, 'gap');
+    const price = out(stage, 'price'), spent = out(stage, 'spent'), left = out(stage, 'left');
+    if (!rows.length) return false;
+    const TOP = 1000000;
+    const TIERS = [{ at: 300000, rub: 15, mark: out(stage, 'm300') }, { at: TOP, rub: 5.9, mark: out(stage, 'm1m') }];
+    const names = { credits: 'пакеты кредитов', sub: 'подписка', ref: 'приглашённые' };
+    const state = {};
+    rows.forEach((r) => { state[r.dataset.part] = +r.dataset.base; });
+    const rub = (v) => (v % 1 ? v.toFixed(1).replace('.', ',') : fmtN(v));
+    const paint = (spoken) => {
+      const total = Object.values(state).reduce((a, v) => a + v, 0);
+      const money = rows.reduce((a, r) => a + (state[r.dataset.part] / +r.dataset.step) * +r.dataset.cost, 0);
+      rows.forEach((r) => {
+        const part = r.dataset.part, v = state[part];
+        out(stage, 'v-' + part).textContent = fmtN(v);
+        out(stage, 's-' + part).style.setProperty('--w', Math.min(100, (v / TOP) * 100) + '%');
+        q(r, '[data-live-act="minus"]').disabled = v === 0;
+      });
+      const tier = [...TIERS].reverse().find((t) => total >= t.at) || null;
+      const next = TIERS.find((t) => total < t.at) || null;
+      TIERS.forEach((t) => { t.mark.dataset.passed = String(total >= t.at); t.mark.dataset.next = String(next === t); });
+      price.textContent = tier ? `${rub(tier.rub)} ₽` : '50 ₽';
+      spent.textContent = `${fmtN(Math.round(money))} ₽`;
+      left.textContent = next ? fmtN(next.at - total) : 'взята';
+      left.dataset.up = String(!next);
+      if (!next) {
+        gap.innerHTML = `Оборот <b class="blk-accent">${fmtN(total)}</b>: цена 5,9 ₽ за тысячу открыта. Держать её нужно каждым кварталом — правило и срок публикуются заранее.`;
+      } else {
+        const want = next.at - total;
+        const packs = Math.ceil(want / 300000), refs = Math.ceil(want / 70000);
+        gap.innerHTML = `Оборот <b class="blk-accent">${fmtN(total)}</b>. До цены ${rub(next.rub)} ₽ не хватает <b class="blk-accent">${fmtN(want)}</b>: это ${packs} ${packs === 1 ? 'пакет' : packs < 5 ? 'пакета' : 'пакетов'} по 4 500 ₽ — или ${refs} ${refs === 1 ? 'приглашённый' : refs < 5 ? 'приглашённых' : 'приглашённых'} за ноль рублей, но дольше на холд.`;
+      }
+      if (spoken) ctx.announce(spoken);
     };
-    parts.forEach((p) => {
-      p.onmouseenter = () => show(p); p.onmouseleave = () => show(sticky);
-      p.onfocus = () => show(p); p.onblur = () => show(sticky);
-      p.onclick = () => { sticky = sticky === p ? null : p; show(sticky); ctx.announce(sticky ? res.textContent : `Оборот квартала ${fmtN(total)} из ${fmtN(TARGET)}.`); };
+    rows.forEach((r) => {
+      const part = r.dataset.part, step = +r.dataset.step;
+      q(r, '[data-live-act="plus"]').onclick = () => {
+        state[part] += step;
+        paint(`${names[part]}: ${fmtN(state[part])} в обороте. ${gap.textContent}`);
+      };
+      q(r, '[data-live-act="minus"]').onclick = () => {
+        state[part] = Math.max(0, state[part] - step);
+        paint(`${names[part]}: ${fmtN(state[part])} в обороте. ${gap.textContent}`);
+      };
     });
+    paint();
     return true;
   },
   N9(stage, ctx) {

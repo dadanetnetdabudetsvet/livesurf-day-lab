@@ -960,11 +960,11 @@
 .blk-gauge-seg[data-lit='true']::after { transform: scaleX(1); }
 .blk-gauge-seg:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: -3px; }
 .blk-gauge-marks { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--ls-ink-2); }
-.blk-gauge-marks span { white-space: nowrap; }
-.blk-gauge-marks span:nth-child(2) { text-align: center; }
-.blk-gauge-marks span:last-child { text-align: right; }
+.blk-gauge-marks > * { white-space: nowrap; }
+.blk-gauge-marks > :nth-child(2) { text-align: center; }
+.blk-gauge-marks > :last-child { text-align: right; }
 .blk-gauge-marks b { display: block; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); color: var(--ls-ink); font-variant-numeric: tabular-nums; }
-.blk-gauge-marks span:first-child b { color: #067A3D; }
+.blk-gauge-marks > :first-child b { color: #067A3D; }
 [data-bg='dark'] .blk-gauge-marks { color: var(--ls-on-dark-2); }
 [data-bg='dark'] .blk-gauge-marks b { color: var(--ls-on-dark); }
 [data-bg='dark'] .blk-gauge-marks span:first-child b { color: var(--ls-green); }
@@ -1037,6 +1037,98 @@
 @media (prefers-reduced-motion: reduce) {
   .blk-ladder--empty > div, .blk-bar--multi button, .blk-bar i { transition: none; }
 }
+
+/* N7: конструктор ступени — действия, шкала с отсечками, следствия в системе */
+.blk-scale-track { position: relative; height: 14px; border-radius: var(--ls-radius-pill); background: var(--ls-line); margin-bottom: 34px; }
+[data-bg='dark'] .blk-scale-track { background: var(--ls-glass-line); }
+[data-bg='mint'] .blk-scale-track { background: rgba(255,255,255,.7); }
+.blk-scale-track > i { display: block; height: 100%; border-radius: var(--ls-radius-pill); background: var(--ls-cyan); transition: width .6s cubic-bezier(.22,.61,.36,1); }
+.blk-mark { position: absolute; top: 0; left: var(--at); transform: translateX(-50%); text-align: center; white-space: nowrap; }
+.blk-mark > i { display: block; width: 2px; height: 14px; margin: 0 auto; background: var(--ls-line-strong); }
+.blk-mark b { display: block; margin-top: 4px; font-size: 10px; font-weight: var(--ls-w-semibold); color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+.blk-mark small { display: block; font-size: 10px; color: var(--ls-ink-2); }
+.blk-mark[data-passed='true'] > i { background: var(--ls-green); width: 3px; }
+.blk-mark[data-passed='true'] b, .blk-mark[data-passed='true'] small { color: #067A3D; font-weight: var(--ls-w-semibold); }
+.blk-mark[data-next='true'] > i { background: var(--ls-cyan-dark); width: 3px; }
+.blk-mark[data-next='true'] b { color: var(--ls-cyan-deep); }
+.blk-mark:first-child { transform: translateX(-30%); }
+.blk-mark:last-child { transform: translateX(-70%); }
+[data-bg='dark'] .blk-mark b, [data-bg='dark'] .blk-mark small { color: var(--ls-on-dark-2); }
+.blk-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.blk-act { text-align: left; border: 1px solid var(--ls-line); background: var(--ls-white); border-radius: var(--ls-radius-md); padding: 10px 12px; font-family: inherit; color: inherit; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+.blk-act b { display: block; font-size: 13px; font-weight: var(--ls-w-semibold); }
+.blk-act span { display: block; margin-top: 2px; font-size: 11px; color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+.blk-act em { display: block; margin-top: 6px; font-style: normal; font-size: 11px; font-weight: var(--ls-w-semibold); color: var(--ls-cyan-text); }
+.blk-act[aria-pressed='true'] { border-color: var(--ls-green); background: rgba(3,200,96,.1); transform: translateY(-1px); }
+.blk-act[aria-pressed='true'] em { color: #067A3D; }
+.blk-act:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+[data-bg='dark'] .blk-act { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+[data-bg='dark'] .blk-act span { color: var(--ls-on-dark-2); }
+[data-bg='dark'] .blk-act em { color: var(--ls-cyan); }
+.blk-outcome { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.blk-outcome > div { padding: 10px 12px; border-radius: var(--ls-radius-sm); background: var(--ls-white); border: 1px solid var(--ls-line); }
+.blk-outcome span { display: block; font-size: 11px; color: var(--ls-ink-2); }
+.blk-outcome b { display: block; margin-top: 4px; font-family: var(--ls-font-display); font-size: 17px; font-weight: var(--ls-w-semibold); font-variant-numeric: tabular-nums; }
+.blk-outcome b[data-up='true'] { color: #067A3D; }
+[data-bg='dark'] .blk-outcome > div { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+[data-bg='dark'] .blk-outcome span { color: var(--ls-on-dark-2); }
+@media (max-width: 430px) {
+  .blk-acts { grid-template-columns: 1fr; }
+  .blk-outcome { grid-template-columns: 1fr; }
+  .blk-outcome > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .blk-outcome b { margin-top: 0; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .blk-scale-track > i, .blk-act { transition: none; } }
+
+/* N8: сегменты оборота внутри шкалы и пульт с шагами */
+.blk-segs { position: absolute; inset: 0; display: flex; border-radius: var(--ls-radius-pill); overflow: hidden; }
+.blk-segs > i { flex: 0 0 var(--w); transition: flex-basis .5s cubic-bezier(.22,.61,.36,1); }
+.blk-segs > i[data-part='credits'] { background: var(--ls-cyan); }
+.blk-segs > i[data-part='sub'] { background: var(--ls-green); }
+.blk-segs > i[data-part='ref'] { background: #F5A623; }
+.blk-ctl { display: flex; flex-direction: column; gap: 6px; }
+.blk-ctl-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: var(--ls-radius-sm); background: var(--ls-white); border: 1px solid var(--ls-line); }
+[data-bg='dark'] .blk-ctl-row { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-ctl-row b { display: block; font-size: 13px; font-weight: var(--ls-w-semibold); }
+.blk-ctl-row small { display: block; margin-top: 2px; font-size: 11px; color: var(--ls-ink-2); font-variant-numeric: tabular-nums; }
+[data-bg='dark'] .blk-ctl-row small { color: var(--ls-on-dark-2); }
+.blk-pm { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.blk-pm button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--ls-line-strong); background: var(--ls-white); color: inherit; font: inherit; font-size: 16px; line-height: 1; cursor: pointer; transition: background .15s, border-color .15s; }
+.blk-pm button:hover { border-color: var(--ls-green); background: rgba(3,200,96,.12); }
+.blk-pm button:disabled { opacity: .4; cursor: default; }
+.blk-pm button:disabled:hover { background: var(--ls-white); border-color: var(--ls-line-strong); }
+.blk-pm button:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
+.blk-pm span { min-width: 74px; text-align: center; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); font-variant-numeric: tabular-nums; }
+[data-bg='dark'] .blk-pm button { background: var(--ls-glass); border-color: var(--ls-glass-line); }
+.blk-more--plain::after { content: none; }
+@media (prefers-reduced-motion: reduce) { .blk-segs > i { transition: none; } }
+
+/* Объяснения «что это такое» на кредитах и опыте (B9, B10) */
+.blk-tip-host { position: relative; }
+.blk-tip-host:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 4px; border-radius: 8px; }
+.blk-explain { cursor: help; border-bottom: 1px dotted var(--ls-ink-2); }
+[data-bg='dark'] .blk-explain { border-bottom-color: var(--ls-on-dark-2); }
+.blk-tip-host > .blk-bubble { top: calc(100% + 8px); }
+.blk-tip-host:hover > .blk-bubble, .blk-tip-host:focus-within > .blk-bubble { opacity: 1; visibility: visible; }
+/* сам пузырь — тоже span внутри .blk-wallet, поэтому правило подписи кошелька
+   перекрывало его цвет: задаём явно, иначе серый текст на тёмном фоне */
+.blk-wallet .blk-bubble { left: 0; transform: none; color: var(--ls-white); }
+[data-bg='dark'] .blk-wallet .blk-bubble { color: var(--ls-ink); }
+.blk-wallet .blk-bubble b, .blk-wallet .blk-bubble span { color: inherit; }
+.blk-wallet .blk-bubble span { margin-top: 0; font-size: 11px; opacity: .85; }
+.blk-wallet .blk-bubble b { font-size: 12px; opacity: 1; }
+.blk-wallet .blk-bubble::before { left: 22px; margin-left: 0; }
+
+/* Типы аккаунта под шкалой — ссылки (B10) */
+.blk-tierlink { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: inherit; }
+.blk-tierlink b { display: block; font-family: var(--ls-font-display); font-size: 13px; font-weight: var(--ls-w-semibold); color: var(--ls-ink); font-variant-numeric: tabular-nums; }
+.blk-tierlink span { border-bottom: 1px solid transparent; transition: border-color .15s, color .15s; }
+.blk-tierlink:hover span, .blk-tierlink:focus-visible span { color: var(--ls-cyan-text); border-bottom-color: currentColor; }
+.blk-tierlink:hover b, .blk-tierlink:focus-visible b { color: var(--ls-cyan-dark); }
+.blk-tierlink:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 3px; border-radius: 6px; }
+.blk-gauge-marks .blk-tierlink:first-child b { color: #067A3D; }
+[data-bg='dark'] .blk-tierlink b { color: var(--ls-on-dark); }
+@media (prefers-reduced-motion: reduce) { .blk-tierlink span { transition: none; } }
 </style>
 <style>
   html, body { margin: 0; height: 100%; }
@@ -1354,7 +1446,7 @@ const live = {
       if (!seg) {
         tip.hidden = true; tween(num, shown, m(MINE)); shown = m(MINE);
         num.removeAttribute('data-hypo');
-        cap.textContent = claimed ? 'Начислено сегодня' : (mult === 1 ? 'Сегодня за визит' : 'За 30 дней визитов');
+        cap.textContent = claimed ? 'Начислено сегодня' : (mult === 1 ? 'Ежедневный бонус' : 'Ежедневный бонус за 30 дней');
         return;
       }
       for (const x of segs) { x.dataset.lit = 'true'; if (x === seg) break; }
@@ -1365,13 +1457,26 @@ const live = {
       tip.hidden = false;
       tip.textContent = `${seg.dataset.tier}: +${fmtN(v)} кр ${period()} — на ${fmtN(v - m(MINE))} больше ваших. Цена статуса — на странице тарифов.`;
     };
+    const pick = (seg) => {
+      sticky = sticky === seg ? null : seg; lit(sticky);
+      ctx.announce(sticky ? tip.textContent + ' Кнопка забирает только закрашенную часть.' : `Ваша часть шкалы: +${fmtN(m(MINE))} кр ${period()}.`);
+    };
     segs.forEach((seg) => {
-      seg.onmouseenter = () => lit(seg); seg.onmouseleave = () => lit(sticky);
+      seg.onmouseenter = () => lit(seg);
       seg.onfocus = () => lit(seg); seg.onblur = () => lit(sticky);
-      seg.onclick = () => {
-        sticky = sticky === seg ? null : seg; lit(sticky);
-        ctx.announce(sticky ? tip.textContent + ' Кнопка забирает только закрашенную часть.' : `Ваша часть шкалы: +${fmtN(m(MINE))} кр ${period()}.`);
-      };
+      seg.onclick = () => pick(seg);
+    });
+    /* уход с полосы ловим один раз на всей полосе: на стыках сегментов
+       пара mouseleave + mouseenter давала мигание подсветки */
+    const bar = q(stage, '.blk-gauge-bar');
+    if (bar) bar.onmouseleave = () => lit(sticky);
+    /* названия статусов под шкалой — тоже управление, не подпись */
+    acts(stage, 'mark').forEach((btn, k) => {
+      const seg = k === 0 ? null : segs[k - 1];
+      btn.onmouseenter = () => lit(seg);
+      btn.onmouseleave = () => lit(sticky);
+      btn.onfocus = () => lit(seg); btn.onblur = () => lit(sticky);
+      btn.onclick = () => (seg ? pick(seg) : pick(sticky));
     });
     const setPeriod = (p, quiet) => {
       periods.forEach((x) => x.setAttribute('aria-selected', String(x === p)));
@@ -1927,58 +2032,148 @@ const live = {
     return true;
   },
   N7(stage, ctx) {
-    const steps = acts(stage, 'step'), needs = acts(stage, 'need'), res = out(stage, 'price');
-    if (!steps.length) return false;
-    let need = 10000;
-    const cost = (price) => Math.round((need / 1000) * price);
-    const paint = () => {
-      steps.forEach((st, i) => {
-        const c = cost(+st.dataset.price);
-        out(stage, 'b' + (i + 1)).textContent = `ваш объём: ${fmtN(c)} ₽ в месяц`;
-      });
-      const first = cost(+steps[0].dataset.price), best = cost(+steps[2].dataset.price);
-      res.innerHTML = `Шкала пустая: покупок ещё не было. При ${fmtN(need)} визитах в месяц первая ступень стоит <b class="blk-accent">${fmtN(first)} ₽</b>, а ступень 1 000 000 — <b class="blk-accent">${fmtN(best)} ₽</b> за тот же объём. Разница <b class="blk-accent">${fmtN(first - best)} ₽</b> в месяц.`;
+    const picks = acts(stage, 'pick'), needs = acts(stage, 'need'), reset = q(stage, '[data-live-act="reset"]');
+    const fill = out(stage, 'fill'), gap = out(stage, 'gap'), money = out(stage, 'money');
+    const price = out(stage, 'price'), bonus = out(stage, 'bonus'), days = out(stage, 'days');
+    if (!picks.length) return false;
+    const TIERS = [
+      { at: 50000, rub: 50, mark: out(stage, 'mark50') },
+      { at: 300000, rub: 15, mark: out(stage, 'mark300') },
+      { at: 1000000, rub: 5.9, mark: out(stage, 'mark1m') },
+    ];
+    const CREDITS = { pack300: 300000, pack1m: 1000000, sub: 90000, ref: 0 };
+    const chosen = new Set();
+    let need = 10000, prevBonus = 73, prevDays = 0;
+    const sum = (f) => picks.filter((p) => chosen.has(p.dataset.key)).reduce((a, p) => a + f(p), 0);
+    const dword = (n) => { const t = n % 100, o = n % 10; return t > 10 && t < 20 ? 'дней' : o === 1 ? 'день' : o > 1 && o < 5 ? 'дня' : 'дней'; };
+    const rub = (v) => (v % 1 ? v.toFixed(1).replace('.', ',') : fmtN(v));
+    /* Чем дешевле всего закрыть остаток: перебор невыбранных действий */
+    const cheapest = (want) => {
+      const rest = picks.filter((p) => !chosen.has(p.dataset.key));
+      let best = null;
+      for (let m = 1; m < (1 << rest.length); m += 1) {
+        const set = rest.filter((_, k) => m & (1 << k));
+        const add = set.reduce((a, p) => a + +p.dataset.sum, 0);
+        if (add < want) continue;
+        const cost = set.reduce((a, p) => a + +p.dataset.cost, 0);
+        if (!best || cost < best.cost || (cost === best.cost && set.length < best.set.length)) best = { set, cost };
+      }
+      return best;
     };
-    steps.forEach((st) => {
-      st.tabIndex = 0; st.setAttribute('role', 'button');
-      const lit = (on) => { steps.forEach((x) => x.removeAttribute('data-lit')); if (on) st.dataset.lit = 'true'; };
-      st.onmouseenter = () => lit(true); st.onmouseleave = () => lit(false);
-      st.onfocus = () => lit(true); st.onblur = () => lit(false);
-      const tell = () => {
-        lit(true);
-        ctx.announce(`${st.dataset.title}: ${fmtN(cost(+st.dataset.price))} ₽ за ${fmtN(need)} визитов в месяц. Цена ступени опубликована в прайсе, это не скидка.`);
+    const paint = (spoken) => {
+      const turnover = sum((p) => +p.dataset.sum);
+      const spent = sum((p) => +p.dataset.cost);
+      const credits = sum((p) => CREDITS[p.dataset.key] || 0);
+      const tier = [...TIERS].reverse().find((t) => turnover >= t.at) || null;
+      const next = TIERS.find((t) => turnover < t.at) || null;
+      fill.style.width = Math.min(100, (turnover / 1000000) * 100) + '%';
+      TIERS.forEach((t) => {
+        t.mark.dataset.passed = String(turnover >= t.at);
+        t.mark.dataset.next = String(next === t);
+      });
+      price.textContent = tier ? `${rub(tier.rub)} ₽` : 'нет';
+      price.dataset.up = String(!!tier);
+      const nb = chosen.has('sub') ? 290 : 73;
+      tween(bonus, prevBonus, nb); prevBonus = nb;
+      bonus.dataset.up = String(nb > 73);
+      const nd = Math.round(credits / 8000);
+      if (nd !== prevDays) { days.textContent = `${fmtN(nd)} ${dword(nd)}`; prevDays = nd; }
+      days.dataset.up = String(nd > 0);
+      /* сколько осталось и чем это закрыть */
+      if (!next) {
+        gap.innerHTML = `<b class="blk-accent">Оборот ${fmtN(turnover)}: цена 5,9 ₽ за тысячу открыта.</b> Дальше по прайсу только пакет 10 000 000 по 0,8 ₽ — это отдельное решение, а не следующая ступень этой шкалы.`;
+      } else {
+        const want = next.at - turnover;
+        const best = cheapest(want);
+        const how = best
+          ? `Дешевле всего закрыть так: ${best.set.map((p) => q(p, 'b').textContent.toLowerCase()).join(' + ')} — ${fmtN(best.cost)} ₽.`
+          : 'Одними показанными действиями этот остаток не закрыть: нужен пакет крупнее.';
+        gap.innerHTML = turnover === 0
+          ? `<b class="blk-accent" data-warn="true">Покупок пока нет.</b> До первой отсечки ${fmtN(next.at)} — весь путь. ${how}`
+          : `Набрано <b class="blk-accent">${fmtN(turnover)}</b>. До цены ${rub(next.rub)} ₽ за тысячу не хватает <b class="blk-accent">${fmtN(want)}</b>. ${how}`;
+      }
+      /* что это значит деньгами на выбранном объёме */
+      const base = Math.round((need / 1000) * 50);
+      if (!tier) {
+        money.innerHTML = `На ${fmtN(need)} визитах в месяц цена пока не открыта: до первой покупки платить не за что, но и скидки нет.`;
+      } else {
+        const now = Math.round((need / 1000) * tier.rub);
+        money.innerHTML = tier.rub === 50
+          ? `На ${fmtN(need)} визитах в месяц это <b class="blk-accent">${fmtN(now)} ₽</b> — цена первой ступени. Следующая отсечка снижает её втрое.`
+          : `На ${fmtN(need)} визитах в месяц это <b class="blk-accent">${fmtN(now)} ₽</b> вместо ${fmtN(base)} ₽ по первой ступени: <b class="blk-accent">${fmtN(base - now)} ₽</b> в месяц разницы. Потрачено на действия ${fmtN(spent)} ₽.`;
+      }
+      if (spoken) ctx.announce(spoken);
+    };
+    picks.forEach((p) => {
+      p.onclick = () => {
+        const k = p.dataset.key, on = !chosen.has(k);
+        if (on) chosen.add(k); else chosen.delete(k);
+        p.setAttribute('aria-pressed', String(on));
+        paint(`${on ? 'Добавлено' : 'Убрано'}: ${q(p, 'b').textContent}, ${fmtN(+p.dataset.sum)} к обороту. ${gap.textContent}`);
       };
-      st.onclick = tell; key(st, tell);
     });
     needs.forEach((b) => {
       b.onclick = () => {
         needs.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-        need = +b.dataset.need; paint();
-        ctx.announce(`Пересчитано на ${fmtN(need)} визитов в месяц. Пустая шкала честнее чужого прогресса: человек видит свою цену, а не чей-то путь.`);
+        need = +b.dataset.need;
+        paint(`Пересчитано на ${fmtN(need)} визитов в месяц.`);
       };
     });
+    reset.onclick = () => {
+      chosen.clear();
+      picks.forEach((p) => p.setAttribute('aria-pressed', 'false'));
+      paint('Сброшено: шкала снова пустая, как у аккаунта без покупок.');
+    };
     paint();
     return true;
   },
   N8(stage, ctx) {
-    const parts = acts(stage, 'part'), res = out(stage, 'mix');
-    if (!parts.length) return false;
-    const TARGET = 1000000;
-    const total = parts.reduce((s2, p) => s2 + +p.dataset.sum, 0);
-    const names = { credits: 'Купленные кредиты', sub: 'Подписка', ref: 'Приглашённые' };
-    const normal = res.innerHTML;
-    let sticky = null;
-    const show = (p) => {
-      parts.forEach((x) => { if (p && x !== p) x.dataset.dim = 'true'; else x.removeAttribute('data-dim'); });
-      if (!p) { res.innerHTML = normal; return; }
-      const sum = +p.dataset.sum, share = Math.round((sum / total) * 100);
-      res.innerHTML = `<b class="blk-accent">${names[p.dataset.part]}: ${fmtN(sum)}</b> из ${fmtN(total)} оборота — это ${share} % шкалы и ${fmtN(+p.dataset.money)} ₽. ${p.dataset.how}.`;
+    const rows = qa(stage, '.blk-ctl-row'), gap = out(stage, 'gap');
+    const price = out(stage, 'price'), spent = out(stage, 'spent'), left = out(stage, 'left');
+    if (!rows.length) return false;
+    const TOP = 1000000;
+    const TIERS = [{ at: 300000, rub: 15, mark: out(stage, 'm300') }, { at: TOP, rub: 5.9, mark: out(stage, 'm1m') }];
+    const names = { credits: 'пакеты кредитов', sub: 'подписка', ref: 'приглашённые' };
+    const state = {};
+    rows.forEach((r) => { state[r.dataset.part] = +r.dataset.base; });
+    const rub = (v) => (v % 1 ? v.toFixed(1).replace('.', ',') : fmtN(v));
+    const paint = (spoken) => {
+      const total = Object.values(state).reduce((a, v) => a + v, 0);
+      const money = rows.reduce((a, r) => a + (state[r.dataset.part] / +r.dataset.step) * +r.dataset.cost, 0);
+      rows.forEach((r) => {
+        const part = r.dataset.part, v = state[part];
+        out(stage, 'v-' + part).textContent = fmtN(v);
+        out(stage, 's-' + part).style.setProperty('--w', Math.min(100, (v / TOP) * 100) + '%');
+        q(r, '[data-live-act="minus"]').disabled = v === 0;
+      });
+      const tier = [...TIERS].reverse().find((t) => total >= t.at) || null;
+      const next = TIERS.find((t) => total < t.at) || null;
+      TIERS.forEach((t) => { t.mark.dataset.passed = String(total >= t.at); t.mark.dataset.next = String(next === t); });
+      price.textContent = tier ? `${rub(tier.rub)} ₽` : '50 ₽';
+      spent.textContent = `${fmtN(Math.round(money))} ₽`;
+      left.textContent = next ? fmtN(next.at - total) : 'взята';
+      left.dataset.up = String(!next);
+      if (!next) {
+        gap.innerHTML = `Оборот <b class="blk-accent">${fmtN(total)}</b>: цена 5,9 ₽ за тысячу открыта. Держать её нужно каждым кварталом — правило и срок публикуются заранее.`;
+      } else {
+        const want = next.at - total;
+        const packs = Math.ceil(want / 300000), refs = Math.ceil(want / 70000);
+        gap.innerHTML = `Оборот <b class="blk-accent">${fmtN(total)}</b>. До цены ${rub(next.rub)} ₽ не хватает <b class="blk-accent">${fmtN(want)}</b>: это ${packs} ${packs === 1 ? 'пакет' : packs < 5 ? 'пакета' : 'пакетов'} по 4 500 ₽ — или ${refs} ${refs === 1 ? 'приглашённый' : refs < 5 ? 'приглашённых' : 'приглашённых'} за ноль рублей, но дольше на холд.`;
+      }
+      if (spoken) ctx.announce(spoken);
     };
-    parts.forEach((p) => {
-      p.onmouseenter = () => show(p); p.onmouseleave = () => show(sticky);
-      p.onfocus = () => show(p); p.onblur = () => show(sticky);
-      p.onclick = () => { sticky = sticky === p ? null : p; show(sticky); ctx.announce(sticky ? res.textContent : `Оборот квартала ${fmtN(total)} из ${fmtN(TARGET)}.`); };
+    rows.forEach((r) => {
+      const part = r.dataset.part, step = +r.dataset.step;
+      q(r, '[data-live-act="plus"]').onclick = () => {
+        state[part] += step;
+        paint(`${names[part]}: ${fmtN(state[part])} в обороте. ${gap.textContent}`);
+      };
+      q(r, '[data-live-act="minus"]').onclick = () => {
+        state[part] = Math.max(0, state[part] - step);
+        paint(`${names[part]}: ${fmtN(state[part])} в обороте. ${gap.textContent}`);
+      };
     });
+    paint();
     return true;
   },
   N9(stage, ctx) {
