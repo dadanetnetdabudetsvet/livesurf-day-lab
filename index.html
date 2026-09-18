@@ -1562,6 +1562,12 @@ h3.group[data-warn='true'] { color: #6B4400; }
 .asm-item .asm-btns { grid-column: 1 / -1; justify-content: flex-end; }
 .asm-grid { grid-template-columns: 320px minmax(0, 1fr); }
 @media (max-width: 1100px) { .asm-grid { grid-template-columns: 1fr; } }
+
+/* Порядок «сначала новые»: метка когорты и подпись у заголовка раздела */
+.cat-new[data-cohort='latest'] { border-color: var(--ls-green); background: rgba(3,200,96,.14); color: #067A3D; font-weight: var(--ls-w-semibold); }
+h3.group small { display: block; margin-top: 4px; font-size: 12px; font-weight: var(--ls-w-medium); letter-spacing: 0; text-transform: none; color: var(--ls-ink-2); }
+.results-line select { font: inherit; font-size: 13px; padding: 4px 8px; border-radius: var(--ls-radius-sm); border: 1px solid var(--ls-line); background: var(--ls-white); color: inherit; }
+.results-line select:focus-visible { outline: 3px solid var(--ls-cyan); outline-offset: 2px; }
 </style>
 <style>
   /* офлайн-сборка: подсказка про режим одного файла */
@@ -1732,7 +1738,7 @@ h3.group[data-warn='true'] { color: #6B4400; }
               </aside>
               <div>
                 <div class="results-line">
-                  <span id="results-count" role="status"></span><label class="check-label"><input type="checkbox" id="selected-only" /> Моя сборка</label>
+                  <span id="results-count" role="status"></span><label class="check-label">Порядок <select id="sort"><option value="new">сначала новые</option><option value="group">по группам</option></select></label><label class="check-label"><input type="checkbox" id="selected-only" /> Моя сборка</label>
                 </div>
                 <div id="list"></div>
                 <div id="empty-results" class="empty-state" hidden>
@@ -2984,6 +2990,16 @@ const notes = {
   Z10: "Празднование частоты транзакций.",
 };
 
+/* Когда блок появился. Библиотека по умолчанию сортируется по новизне:
+   иначе новые блоки теряются в середине шестнадцати групп. */
+const latestIds = new Set("O7 B9 B10 N7 N8 N9".split(" "));
+const reworkedIds = new Set(["O2"]);
+const cohorts = [
+  { key: "latest", label: "Добавлено последним", note: "правки по замечаниям владельца 18 сентября", badge: "Новое" },
+  { key: "v2", label: "Версия 2: пересборка по аудиту", note: "блоки, которых не было в версии 1", badge: "Версия 2" },
+  { key: "v1", label: "Версия 1: по снимку текущего окна", note: "основа лаборатории", badge: "" },
+];
+
 function metadata(id) {
   const ev = evidence[id];
   const sg = signals[id] || defaultSignal;
@@ -2994,6 +3010,9 @@ function metadata(id) {
           : experiment.has(id) ? "experiment" : "context",
     roles: only[id] || Object.keys(roles),
     fresh: /^[LMNZ]/.test(id) || ["C8", "C9", "D8", "D9", "D10", "J6", "J7", "J8", "J9"].includes(id),
+    cohort: latestIds.has(id) ? "latest"
+      : (/^[LMNZ]/.test(id) || ["C8", "C9", "D8", "D9", "D10", "J6", "J7", "J8", "J9"].includes(id)) ? "v2" : "v1",
+    reworked: reworkedIds.has(id),
     practice: practice[id],
     evidence: ev ? ev.level : "—",
     evidenceSrc: ev ? ev.src : "В аудите отдельно не разбиралось.",
@@ -3029,7 +3048,7 @@ function warnings(ids) {
   return result;
 }
 
-return { priorities, roles, groups, lensNames, evidenceLevels, signalLevels, scenarios, shortlist, metadata, warnings };
+return { priorities, roles, groups, lensNames, evidenceLevels, signalLevels, scenarios, shortlist, cohorts, metadata, warnings };
 })();
 
 const M_logic = (() => {
@@ -5055,7 +5074,7 @@ return { initLogic };
 
 const M_lab = (() => {
 const Popup = M_popup.default;
-const { priorities, roles, groups, scenarios, metadata, warnings, lensNames, evidenceLevels, signalLevels } = M_data;
+const { priorities, roles, groups, cohorts, scenarios, metadata, warnings, lensNames, evidenceLevels, signalLevels } = M_data;
 const { attachLive, live } = M_live;
 const { lint, emission, readiness, creditPrices } = M_logic;
 const { initLogic } = M_labLogic;
@@ -5072,6 +5091,7 @@ const url = new URL(location.href);
 const fmt = (n) => Math.round(n).toLocaleString("ru-RU");
 let blocks = [], selection = [], hidden = new Set(), half = new Set();
 let group = url.searchParams.get("group")?.slice(0, 1) || "all";
+let sort = url.searchParams.get("sort") === "group" ? "group" : "new";
 let scenario = Object.hasOwn(scenarios, url.searchParams.get("scenario")) ? url.searchParams.get("scenario") : "owner:normal";
 let role = scenario.split(":")[0];
 let view = ["scenarios", "library", "principles"].includes(url.searchParams.get("view"))
@@ -5092,6 +5112,7 @@ function updateURL() {
   u.searchParams.set("view", view);
   u.searchParams.set("scenario", scenario);
   if (group !== "all") u.searchParams.set("group", group); else u.searchParams.delete("group");
+  if (sort === "group") u.searchParams.set("sort", "group"); else u.searchParams.delete("sort");
   history.replaceState(null, "", u);
 }
 function setView(next) {
@@ -5247,7 +5268,11 @@ function createCard(b) {
   ev.textContent = b.evidence;
   ev.title = evidenceLevels[b.evidence] || "";
   ev.dataset.level = b.evidence;
-  head.querySelector(".cat-new").hidden = !b.fresh;
+  const badge = head.querySelector(".cat-new");
+  const co = cohorts.find((c) => c.key === b.cohort);
+  badge.textContent = b.reworked ? "Переделан" : (co ? co.badge : "");
+  badge.dataset.cohort = b.reworked ? "latest" : b.cohort;
+  badge.hidden = !badge.textContent;
   head.querySelector(".cat-live").hidden = !live[b.id];
   card.dataset.live = String(!!live[b.id]);
   const pr = head.querySelector(".cat-priority");
@@ -5346,15 +5371,33 @@ function renderLibrary() {
   $("results-count").textContent = `Показано ${visible.length} из ${blocks.length} блоков`;
   $("empty-results").hidden = visible.length > 0;
   $("list").replaceChildren();
-  for (const [key, label] of Object.entries(groups)) {
-    const mine = visible.filter((b) => b.group === key);
-    if (!mine.length) continue;
+  $("sort").value = sort;
+  /* по новизне — когорты, иначе привычные группы */
+  const sections = sort === "new"
+    ? cohorts.map((c) => ({
+        key: c.key,
+        title: c.label,
+        note: c.note,
+        items: visible.filter((b) => (b.reworked ? "latest" : b.cohort) === c.key),
+      }))
+    : Object.entries(groups).map(([key, label]) => ({
+        key, title: `${key}. ${label}`, warn: key === "Z",
+        items: visible.filter((b) => b.group === key),
+      }));
+  for (const section of sections) {
+    if (!section.items.length) continue;
     const h = document.createElement("h3");
-    h.className = "group"; h.textContent = `${key}. ${label}`;
-    if (key === "Z") h.dataset.warn = "true";
+    h.className = "group";
+    h.textContent = section.title;
+    if (section.warn) h.dataset.warn = "true";
+    if (section.note) {
+      const small = document.createElement("small");
+      small.textContent = section.note;
+      h.append(small);
+    }
     const grid = document.createElement("div");
     grid.className = "grid";
-    mine.forEach((b) => grid.append(createCard(b)));
+    section.items.forEach((b) => grid.append(createCard(b)));
     $("list").append(h, grid);
   }
   updateSelection();
@@ -5398,6 +5441,13 @@ function openBlock(id) {
 }
 for (const id of ["search", "role-filter", "priority-filter", "evidence-filter", "signal-filter", "new-only", "live-only", "emit-only", "selected-only"])
   $(id).addEventListener(id === "search" ? "input" : "change", renderLibrary);
+$("sort").addEventListener("change", () => {
+  sort = $("sort").value === "group" ? "group" : "new";
+  updateURL(); renderLibrary();
+  announce(sort === "new"
+    ? "Сначала новые: сверху то, что добавлено последним, ниже версия 2 и версия 1."
+    : "По группам: привычный порядок от A до Z.");
+});
 for (const id of ["reset-filters", "empty-reset"]) $(id).addEventListener("click", resetFilters);
 $("clear-selection").addEventListener("click", () => { selection = []; hidden.clear(); half.clear(); save(); renderLibrary(); announce("Сборка очищена."); });
 $("use-recipe").addEventListener("click", () => {

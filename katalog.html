@@ -2751,6 +2751,16 @@ const notes = {
   Z10: "Празднование частоты транзакций.",
 };
 
+/* Когда блок появился. Библиотека по умолчанию сортируется по новизне:
+   иначе новые блоки теряются в середине шестнадцати групп. */
+const latestIds = new Set("O7 B9 B10 N7 N8 N9".split(" "));
+const reworkedIds = new Set(["O2"]);
+const cohorts = [
+  { key: "latest", label: "Добавлено последним", note: "правки по замечаниям владельца 18 сентября", badge: "Новое" },
+  { key: "v2", label: "Версия 2: пересборка по аудиту", note: "блоки, которых не было в версии 1", badge: "Версия 2" },
+  { key: "v1", label: "Версия 1: по снимку текущего окна", note: "основа лаборатории", badge: "" },
+];
+
 function metadata(id) {
   const ev = evidence[id];
   const sg = signals[id] || defaultSignal;
@@ -2761,6 +2771,9 @@ function metadata(id) {
           : experiment.has(id) ? "experiment" : "context",
     roles: only[id] || Object.keys(roles),
     fresh: /^[LMNZ]/.test(id) || ["C8", "C9", "D8", "D9", "D10", "J6", "J7", "J8", "J9"].includes(id),
+    cohort: latestIds.has(id) ? "latest"
+      : (/^[LMNZ]/.test(id) || ["C8", "C9", "D8", "D9", "D10", "J6", "J7", "J8", "J9"].includes(id)) ? "v2" : "v1",
+    reworked: reworkedIds.has(id),
     practice: practice[id],
     evidence: ev ? ev.level : "—",
     evidenceSrc: ev ? ev.src : "В аудите отдельно не разбиралось.",
